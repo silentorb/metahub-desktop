@@ -2,10 +2,24 @@
   "name": "metahub-desktop",
   "version": "0.1.0",
   "description": "",
-  "main": "src/index.ts",
+  "main": "src/main.ts",
   "scripts": {
+    "build:vite": "vite build",
+    "start": "electron ./src/main.ts -r ts-node/register/transpile-only",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Christopher W. Johnson",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.4",
+    "electron": "^18.2.4",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4",
+    "vite": "^2.9.9"
+  },
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  }
 }
