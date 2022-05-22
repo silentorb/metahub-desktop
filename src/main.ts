@@ -6,7 +6,8 @@ const createWindow = () => {
     height: 600
   })
 
-  win.loadFile('../build/index.html')
+  win.loadFile('../dist/index.html')
+  win.maximize()
   win.webContents.openDevTools()
 }
 
