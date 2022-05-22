@@ -2,7 +2,6 @@
   "name": "metahub-desktop",
   "version": "0.1.0",
   "description": "",
-  "packageManager": "yarn@3.2.1",
   "main": "src/main.ts",
   "scripts": {
     "build": "snowpack build",
@@ -17,11 +16,12 @@
     "electron": "^18.2.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "snowpack": "^3.8.8",
     "ts-node": "^10.8.0",
     "typescript": "^4.6.4"
   },
   "devDependencies": {
-    "@types/react": "^18",
-    "@types/react-dom": "^18"
+    "@types/react": "^17",
+    "@types/react-dom": "^17"
   }
 }
