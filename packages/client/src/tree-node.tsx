@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import React, { FocusEvent, KeyboardEvent } from 'react';
 import { ChevronDown, ChevronRight, FileText, Folder } from 'react-feather';
-import { NodeHandlers, NodeRendererProps } from 'react-arborist';
+import { NodeHandlers } from 'react-arborist';
 import styled from 'styled-components'
+import { NodeRendererProps } from 'react-arborist/dist/types'
 
 const size = 16;
 const color = '#999';
@@ -133,7 +134,7 @@ export const TreeNode = ({
       ref={innerRef}
       style={styles.row}
       className={classNames('row', state)}
-      onClick={(e) => handlers.select(e)}
+      onClick={(e) => handlers.select(e, { selectOnClick: true })}
     >
       <TreeRowContents className="row-contents" style={styles.indent}>
         <MaybeToggleButton

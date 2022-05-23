@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "outDir": "../../dist/main",
+    "strict": true,
+    "sourceMap": true,
+    "declaration": true,
+    "allowSyntheticDefaultImports": false,
+    "lib": [
+      "es2020",
+    ]
+  },
+  "include": ["./src/**/*", "./test/**/*"],
+  "exclude": ["../../node_modules", "node_modules"]
+}

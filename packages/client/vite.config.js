@@ -29,6 +29,7 @@ module.exports = {
   base: './',
   build: {
     sourcemap: true,
+    outDir: 'dist/client'
   },
   plugins: [].concat(reactConfiguration),
 }

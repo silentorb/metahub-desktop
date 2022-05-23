@@ -1,0 +1,27 @@
+{
+  "name": "metahub-main",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "yarn start --source test/template",
+    "build:client": "vite build --config packages/client/vite.config.js",
+    "start": "electron ./src/main.ts -r ts-node/register/transpile-only",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christopher W. Johnson",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^9.2.0",
+    "electron": "^18.2.4",
+    "gray-matter": "^4.0.3",
+    "styled-components": "^5.3.5",
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.35",
+    "concurrently": "^7.2.1",
+    "electron-reloader": "^1.2.3",
+    "typescript": "^4.6.4",
+    "vite": "^2.9.9"
+  }
+}
