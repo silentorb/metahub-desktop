@@ -1,0 +1,12 @@
+{
+  "name": "metahub-preload",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "electron": "^18.2.4"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.4",
+    "vite": "^2.9.9"
+  }
+}

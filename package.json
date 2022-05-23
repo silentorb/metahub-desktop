@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "yarn start --source test/template",
     "build:client": "vite build --config packages/client/vite.config.js",
+    "build:preload": "vite build --config packages/preload/vite.config.js",
     "start": "electron ./dist/main/main.js  --source test/template",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

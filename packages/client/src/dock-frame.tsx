@@ -4,6 +4,11 @@ import 'rc-dock/dist/rc-dock.css'
 import { RecordTree } from './record-tree'
 
 export const DockFrame = () => {
+  window.electronAPI.test()
+    .then((result: string) => {
+      console.log('result', result)
+    })
+
   const defaultLayout = {
     dockbox: {
       mode: 'horizontal',

@@ -5,7 +5,6 @@
   "main": "src/main.ts",
   "scripts": {
     "dev": "yarn start --source test/template",
-    "build:client": "vite build --config packages/client/vite.config.js",
     "start": "electron ./src/main.ts -r ts-node/register/transpile-only",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,7 +14,7 @@
     "commander": "^9.2.0",
     "electron": "^18.2.4",
     "gray-matter": "^4.0.3",
-    "styled-components": "^5.3.5",
+    "styled-components": "^5.3.5"
   },
   "devDependencies": {
     "@types/node": "^17.0.35",

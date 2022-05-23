@@ -1,3 +1,5 @@
+const path = require('path')
+const { builtinModules } = require('module')
 
 // Currently the only way to see styled component names while debugging is to use a babel plugin.
 // Vite doesn't normally need babel.
@@ -29,7 +31,18 @@ module.exports = {
   base: './',
   build: {
     sourcemap: true,
-    outDir: 'dist/client'
+    outDir: 'dist/preload',
+    lib: {
+      entry: path.resolve(__dirname, 'src/index.ts'),
+      fileName: (format) => `preload.js`,
+      formats: ['cjs'],
+    },
+    rollupOptions: {
+      external: [
+        'electron',
+        ...builtinModules.flatMap(p => [p, `node:${p}`]),
+      ]
+    }
   },
   plugins: [].concat(reactConfiguration),
 }

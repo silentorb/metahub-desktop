@@ -1,17 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "commonjs",
+    "module": "esnext",
+    "target": "esnext",
     "noEmit": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
     "jsx": "react",
     "strict": true,
+    "isolatedModules": true,
+    "types" : ["node"],
     "sourceMap": true,
     "declaration": false,
-    "allowSyntheticDefaultImports": true,
-    "lib": [
-      "es2020",
-      "dom"
-    ]
   },
   "include": ["./src/**/*", "./test/**/*"],
   "exclude": ["node_modules"]
