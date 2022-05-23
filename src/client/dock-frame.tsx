@@ -1,6 +1,7 @@
 import React from 'react'
 import DockLayout from 'rc-dock'
 import 'rc-dock/dist/rc-dock.css'
+import { RecordTree } from './record-tree'
 
 export const DockFrame = () => {
   const defaultLayout = {
@@ -9,7 +10,7 @@ export const DockFrame = () => {
       children: [
         {
           tabs: [
-            { id: 'tab1', title: 'tab1', content: <div>Hello World</div> }
+            { id: 'tab1', title: 'tab1', content: <RecordTree/> }
           ]
         }
       ]
