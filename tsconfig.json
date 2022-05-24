@@ -1,0 +1,10 @@
+{
+  "noEmit": true,
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    {"path": "packages/main"},
+    {"path": "packages/metahub-client"},
+    {"path": "packages/metahub-common"},
+    {"path": "packages/preload"}
+  ]
+}

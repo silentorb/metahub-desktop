@@ -8,11 +8,24 @@
   ],
   "scripts": {
     "dev": "yarn start --source test/template",
-    "build:client": "vite build --config packages/client/vite.config.js",
+    "build:client": "vite build --config packages/metahub-client/vite.config.js",
     "build:preload": "vite build --config packages/preload/vite.config.js",
-    "start": "electron ./dist/main/main.js  --source test/template",
+    "build:main": "cd packages/main && yarn tsc --build",
+    "start": "electron ./dist/main/main.js --source test/template",
+    "watch:client": "yarn build:client --watch",
+    "watch:preload": "yarn build:preload --watch",
+    "watch:main": "yarn build:main --watch",
+    "build": "concurrently \"yarn build:client\" \"yarn build:preload\" \"yarn build:main\"",
+    "watch": "concurrently \"yarn watch:client\" \"yarn watch:preload\" \"yarn watch:main\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Christopher W. Johnson",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.2.1"
+  },
+  "resolutions": {
+    "@types/react": "17.0.17",
+    "react": "^17.0.2"
+  }
 }

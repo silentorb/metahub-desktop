@@ -6,11 +6,15 @@
     "strict": true,
     "sourceMap": true,
     "declaration": true,
-    "allowSyntheticDefaultImports": false,
+    "types": [],
     "lib": [
       "es2020",
+      "dom"
     ]
   },
   "include": ["./src/**/*", "./test/**/*"],
-  "exclude": ["../../node_modules", "node_modules"]
+  "exclude": ["../../node_modules", "node_modules"],
+  "references": [
+    {"path": "../metahub-common"}
+  ]
 }

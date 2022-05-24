@@ -1,4 +1,4 @@
-import { RecordInfo } from '../core'
+import { RecordInfo } from 'metahub-common'
 import { writeFile } from './file-operations'
 import { MarkdownRecord } from './types'
 import { getMarkdownTitle } from './markdown'

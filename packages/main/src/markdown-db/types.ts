@@ -1,4 +1,4 @@
-import { RecordPath, RecordInfo } from '../core'
+import { RecordPath, RecordInfo } from 'metahub-common'
 
 export interface MarkdownDatabaseConfig {
   path: string

@@ -1,5 +1,5 @@
 import { MarkdownTree } from './types'
-import { RecordInfo } from '../core'
+import { RecordInfo } from 'metahub-common'
 
 export function getMarkdownTitleOrUndefined(content: MarkdownTree): string | undefined {
   if (false) {

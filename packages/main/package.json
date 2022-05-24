@@ -14,12 +14,13 @@
     "commander": "^9.2.0",
     "electron": "^18.2.4",
     "gray-matter": "^4.0.3",
+    "metahub-common": "1.0.0",
     "styled-components": "^5.3.5"
   },
   "devDependencies": {
     "@types/node": "^17.0.35",
-    "concurrently": "^7.2.1",
     "electron-reloader": "^1.2.3",
+    "source-map-support": "^0.5.21",
     "typescript": "^4.6.4",
     "vite": "^2.9.9"
   }

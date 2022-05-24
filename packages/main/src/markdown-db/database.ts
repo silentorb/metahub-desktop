@@ -1,4 +1,4 @@
-import { DataSource, RecordInfo, RecordPath } from '../core'
+import { DataSource, RecordInfo, RecordPath } from 'metahub-common'
 import { gatherFiles } from './reading'
 import { MarkdownDatabaseCache, MarkdownDatabaseConfig, MarkdownRecord } from './types'
 import { updateRecord } from './writing'
@@ -21,13 +21,13 @@ export class MarkdownDatabase implements DataSource<MarkdownRecord> {
     return Promise.resolve(undefined)
   }
 
-  async getAllRecords(): Promise<RecordPath[]> {
+  async getAllRecords(): Promise<RecordInfo[]> {
     return gatherFiles(this.config.path)
-      .map(f => f.path)
   }
 
   getRecordContent(): Promise<MarkdownRecord> {
-    return Promise.resolve(undefined)
+    const result = {} as any
+    return Promise.resolve(result)
   }
 
   moveNamespace(previous: string, next: string): Promise<void> {

@@ -1,12 +1,19 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('source-map-support').install()
+  require('electron-reloader')(module)
+}
+
 import { program } from 'commander'
 import { app, BrowserWindow, ipcMain } from 'electron'
-import { newServer } from './server'
+import { newServer, Server } from './server'
 import * as path from 'path'
 
 program
-  .option('--source')
+  .option('--source <path>', 'path to a data source root directory')
 
 program.parse()
+
+let server: Server
 
 const createWindow = () => {
   const options = program.opts()
@@ -14,16 +21,11 @@ const createWindow = () => {
   if (!source)
     throw new Error('--source CLI argument is temporarily required')
 
-  const server = newServer({
+  server = newServer({
     database: {
       path: source,
     }
   })
-
-  try {
-    require('electron-reloader')(module);
-  } catch {
-  }
 
   const win = new BrowserWindow({
     width: 800,
@@ -36,15 +38,15 @@ const createWindow = () => {
   win.loadFile('../client/index.html')
   win.maximize()
   win.webContents.openDevTools()
-
 }
 
-async function test() {
-  return 'Hello there!'
-}
+const getAllRecords = async () =>
+  server
+    ? server.db.getAllRecords()
+    : []
 
 app.whenReady().then(() => {
-  ipcMain.handle('test2', test)
+  ipcMain.handle('getAllRecords', getAllRecords)
   createWindow()
 })
 

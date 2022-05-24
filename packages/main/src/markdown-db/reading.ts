@@ -1,6 +1,7 @@
 import { getFilesRecursive } from './file-operations'
 import { getFileNameWithoutExtension, getRecordPathFromFullPath } from './path-operations'
-import { RecordSurfaceInfo } from '../core'
+import { RecordInfo } from 'metahub-common'
+import * as path from 'path'
 
 const matter = require('gray-matter')
 
@@ -20,15 +21,16 @@ export const loadMarkDown: ContentLoader<Article> = file => {
 }
 
 // TODO: Make async
-export function gatherFiles(directory: string): RecordSurfaceInfo[] {
+export function gatherFiles(directory: string): RecordInfo[] {
   const files = getFilesRecursive(directory)
+  const root = path.resolve(directory)
   return files.map(file => {
     const key = getFileNameWithoutExtension(file)
     if (!key)
       throw new Error(`Could not find file ${file}`)
 
     // TODO: Properly format properties
-    return getRecordPathFromFullPath(file, directory)
+    return getRecordPathFromFullPath(file, root)
   })
 }
 
