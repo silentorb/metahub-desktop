@@ -6,9 +6,12 @@ import * as A from 'fp-ts/lib/Array'
 import * as O from 'fp-ts/Option'
 import { pipe } from 'fp-ts/function'
 import * as TE from 'fp-ts/lib/TaskEither'
-import { parseMarkdown } from './markdown'
+import * as T from 'fp-ts/lib/TaskEither'
+import { getMarkdownTitle, parseMarkdown } from './markdown'
 import * as R from 'fp-ts/lib/Record'
 import { VFile } from 'vfile'
+import { TaskEither } from 'fp-ts/lib/TaskEither'
+import { Node } from 'unist'
 
 export type ContentLoader<T> = (file: string) => T
 
@@ -24,19 +27,27 @@ interface Article {
 //   return { content, data }
 // }
 
-export const loadDocument = (file: string) =>
+export const loadDocument = (file: string): TaskEither<Error, Node> =>
   pipe(
     readFile(file),
-    TE.chain(parseMarkdown)
+    TE.chainEitherK(parseMarkdown)
   )
 
 export async function loadDocuments(files: string[]) {
-  const result: { [key: string]: VFile } = {}
+  const result: { [key: string]: Node } = {}
+  const errors = []
   for (const file of files) {
-    await pipe(
+    const k = await pipe(
       loadDocument(file),
-      TE.map(document => result[file] = document)
-    )
+      TE.match(
+        error => {
+          errors.push(error);
+          return undefined
+        },
+        document => result[file] = document
+      )
+    )()
+    const i = 0
   }
   return result
 }
@@ -54,7 +65,7 @@ export async function gatherFiles(directory: string): Promise<DataDocument[]> {
         O.map(document => ({
           info: {
             ...info,
-            title: ''
+            title: getMarkdownTitle(document, info)
           }
         }))
       ))

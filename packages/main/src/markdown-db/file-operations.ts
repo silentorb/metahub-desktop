@@ -26,11 +26,11 @@ export function getFilesRecursive(fileOrDirectory: string): string[] {
 
 export function readFile(filePath: string): TaskEither<Error, string> {
   return TE.tryCatch(
-    () => fs.readFile.__promisify__(filePath, 'utf8'),
+    () => fs.promises.readFile(filePath, 'utf8'),
     reason => new Error(`${reason}`)
   )
 }
 
 export function writeFile(filePath: string, content: string): Promise<void> {
-  return fs.writeFile.__promisify__(filePath, content)
+  return fs.promises.writeFile(filePath, content)
 }
