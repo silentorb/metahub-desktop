@@ -1,19 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import { DockFrame } from './dock-frame'
 import './styles.css'
+import { AppServices } from './types'
+import { DatabaseContext } from './contexts'
 
-const App = () => {
+interface Props {
+  services: AppServices
+}
+
+const App = (props: Props) => {
+  const { database } = props.services
   return (
     <div>
-      <DockFrame/>
+      <DatabaseContext.Provider value={{ database }}>
+        <DockFrame/>
+      </DatabaseContext.Provider>
     </div>
   )
 }
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App/>
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+export function startMetaHubClient(props: Props) {
+  ReactDOM.render(
+    <React.StrictMode>
+      <App {...props}/>
+    </React.StrictMode>,
+    document.getElementById('root')
+  )
+}
