@@ -1,4 +1,4 @@
-import { RecordPath, RecordInfo } from 'metahub-common'
+import { RecordPath, RecordInfo } from 'metahub-protocol'
 
 export interface MarkdownDatabaseConfig {
   path: string
@@ -9,8 +9,3 @@ export interface MarkdownDatabaseCache {
 }
 
 export type MarkdownTree = any
-
-export interface MarkdownRecord {
-  metadata: any
-  content: MarkdownTree
-}

@@ -1,5 +1,7 @@
 import * as path from 'path'
-import { RecordInfo } from 'metahub-common'
+import { NonEmptyStringArray, RecordInfo } from 'metahub-protocol'
+import { none, Option, some } from 'fp-ts/Option'
+import * as O from 'fp-ts/Option'
 
 export function getFilePathWithoutExtension(file: string): string {
   const match = file.match(/^(.*)\.[^.]+$/)
@@ -10,14 +12,15 @@ export function getFileNameWithoutExtension(file: string): string {
   return getFilePathWithoutExtension(path.basename(file))
 }
 
-export function getRecordPathFromFullPath(filePath: string, rootPath: string): RecordInfo {
+export function getRecordPathFromFullPath(filePath: string, rootPath: string): Option<Omit<RecordInfo, 'title'>> {
   const withoutExternal = path.relative(rootPath, filePath)
   const withoutExtension = getFilePathWithoutExtension(withoutExternal)
-  return {
-    path: withoutExtension,
-    namespace: path.dirname(withoutExtension),
-    name: path.basename(withoutExtension),
-    storagePath: filePath,
-    title: '',
-  }
+  const tokens = withoutExtension.split('/')
+  return tokens.length > 0
+    ? some({
+      id: withoutExtension,
+      path: tokens as NonEmptyStringArray,
+      storagePath: filePath,
+    })
+    : none
 }

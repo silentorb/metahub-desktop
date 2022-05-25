@@ -4,7 +4,7 @@
   "main": "src/index.ts",
   "dependencies": {
     "electron": "^18.2.4",
-    "metahub-common": "1.0.0",
+    "metahub-protocol": "1.0.0",
     "rc-dock": "^3.2.10",
     "react": "^17.0.2",
     "react-arborist": "^1.0.3",

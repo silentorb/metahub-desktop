@@ -1,4 +1,4 @@
-import { DocumentDataSource } from 'metahub-common'
+import { DocumentDataSource } from 'metahub-protocl'
 
 export interface IElectronAPI extends DocumentDataSource{
 }

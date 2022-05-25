@@ -13,9 +13,14 @@
   "dependencies": {
     "commander": "^9.2.0",
     "electron": "^18.2.4",
-    "gray-matter": "^4.0.3",
-    "metahub-common": "1.0.0",
-    "styled-components": "^5.3.5"
+    "fp-ts": "^2.12.1",
+    "metahub-protocol": "1.0.0",
+    "remark": "^13.0.0",
+    "remark-parse": "^9.0.0",
+    "remark-frontmatter": "^3.0.0",
+    "remark-gfm": "^2.0.0",
+    "styled-components": "^5.3.5",
+    "unified": "^9.2.2"
   },
   "devDependencies": {
     "@types/node": "^17.0.35",

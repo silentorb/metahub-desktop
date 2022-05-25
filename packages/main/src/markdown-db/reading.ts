@@ -1,9 +1,14 @@
-import { getFilesRecursive } from './file-operations'
-import { getFileNameWithoutExtension, getRecordPathFromFullPath } from './path-operations'
-import { RecordInfo } from 'metahub-common'
+import { getFilesRecursive, readFile } from './file-operations'
+import { getRecordPathFromFullPath } from './path-operations'
+import { DataDocument } from 'metahub-protocol'
 import * as path from 'path'
-
-const matter = require('gray-matter')
+import * as A from 'fp-ts/lib/Array'
+import * as O from 'fp-ts/Option'
+import { pipe } from 'fp-ts/function'
+import * as TE from 'fp-ts/lib/TaskEither'
+import { parseMarkdown } from './markdown'
+import * as R from 'fp-ts/lib/Record'
+import { VFile } from 'vfile'
 
 export type ContentLoader<T> = (file: string) => T
 
@@ -12,34 +17,56 @@ interface Article {
   data: any
 }
 
-// TODO: Make async
-export const loadMarkDown: ContentLoader<Article> = file => {
-  const response = matter.read(file)
-  const { content } = response
-  const data = { ...response.data }
-  return { content, data }
+// export const loadMarkDown: ContentLoader<Article> = file => {
+//   const response = matter.read(file)
+//   const { content } = response
+//   const data = { ...response.data }
+//   return { content, data }
+// }
+
+export const loadDocument = (file: string) =>
+  pipe(
+    readFile(file),
+    TE.chain(parseMarkdown)
+  )
+
+export async function loadDocuments(files: string[]) {
+  const result: { [key: string]: VFile } = {}
+  for (const file of files) {
+    await pipe(
+      loadDocument(file),
+      TE.map(document => result[file] = document)
+    )
+  }
+  return result
 }
 
-// TODO: Make async
-export function gatherFiles(directory: string): RecordInfo[] {
+export async function gatherFiles(directory: string): Promise<DataDocument[]> {
   const files = getFilesRecursive(directory)
   const root = path.resolve(directory)
-  return files.map(file => {
-    const key = getFileNameWithoutExtension(file)
-    if (!key)
-      throw new Error(`Could not find file ${file}`)
-
-    // TODO: Properly format properties
-    return getRecordPathFromFullPath(file, root)
-  })
+  const documents = await loadDocuments(files)
+  return A.filterMap((file: string) => {
+    return pipe(
+      getRecordPathFromFullPath(file, root),
+      O.chain(info => pipe(
+        documents,
+        R.lookup(file),
+        O.map(document => ({
+          info: {
+            ...info,
+            title: ''
+          }
+        }))
+      ))
+    )
+  })(files)
 }
 
-// TODO: Make async
-export function scanSourceFiles(dirPath: string) {
-  const files = gatherFiles(dirPath)
-
-  // for (const [key, filePath] of files) {
-  //   // const templateName = article.data.template
-  //   const contents = loadMarkDown(filePath)
-  // }
-}
+// export async function scanSourceFiles(dirPath: string) {
+//   const files = gatherFiles(dirPath)
+//
+//   // for (const [key, filePath] of files) {
+//   //   // const templateName = article.data.template
+//   //   const contents = loadMarkDown(filePath)
+//   // }
+// }

@@ -1,4 +1,4 @@
-import { DataSource } from 'metahub-common'
+import { DataSource } from 'metahub-protocol'
 import { MarkdownDatabase, MarkdownDatabaseConfig } from '../markdown-db'
 
 export interface ServerConfig {

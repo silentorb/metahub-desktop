@@ -1,11 +1,10 @@
-import { RecordInfo } from 'metahub-common'
+import { DataDocument, RecordInfo } from 'metahub-protocol'
 import { writeFile } from './file-operations'
-import { MarkdownRecord } from './types'
 import { getMarkdownTitle } from './markdown'
 
-export async function updateRecord(info: RecordInfo, record: MarkdownRecord): Promise<RecordInfo> {
+export async function updateRecord(info: RecordInfo, record: DataDocument): Promise<RecordInfo> {
   const title = getMarkdownTitle(record.content, info)
-  await writeFile(info.path, '')
+  await writeFile(info.id, '')
   return {
     ...info,
     title,
