@@ -1,6 +1,6 @@
-import { DocumentDataSource } from 'metahub-protocl'
+import { DocumentDataSource } from 'metahub-protocol'
 
-export interface IElectronAPI extends DocumentDataSource{
+export interface IElectronAPI extends DocumentDataSource {
 }
 
 declare global {
@@ -13,4 +13,4 @@ const _api = window.electronAPI
 
 export const api = () => window.electronAPI
 
-export const getDatabase = () => window.electronAPI
+export const getDatabase: () => DocumentDataSource = () => window.electronAPI

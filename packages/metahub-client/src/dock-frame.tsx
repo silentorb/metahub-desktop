@@ -3,17 +3,21 @@ import { DockLayout, LayoutData } from 'rc-dock'
 import 'rc-dock/dist/rc-dock.css'
 import { RecordTree } from './record-tree'
 
-export const DockFrame = () => {
+interface Props {
+}
+
+export const DockFrame = (props: Props) => {
   const defaultLayout: LayoutData = {
     dockbox: {
       mode: 'horizontal',
-      children: [
-        {
-          tabs: [
-            { id: 'tab1', title: 'tab1', content: <RecordTree/> }
-          ]
-        }
-      ]
+      children:
+        [
+          {
+            tabs: [
+              { id: 'tab1', title: 'tab1', content: <RecordTree /> }
+            ]
+          }
+        ]
     }
   }
 

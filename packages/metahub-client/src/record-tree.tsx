@@ -1,15 +1,30 @@
-import React from "react"
-import { Tree } from "react-arborist"
+import React, { useEffect, useState } from 'react'
+import { Tree } from 'react-arborist'
 import { TreeNode } from './tree-node'
+import { RecordInfo } from 'metahub-protocol'
+import { getDatabase } from './api'
 
-export const RecordTree = () => {
+interface Props {
+
+}
+
+export const RecordTree = (props: Props) => {
+  const db = getDatabase()
+  const [documents, setDocuments] = useState([] as Array<RecordInfo>)
+  useEffect(() => {
+    db.getAllRecords()
+      .then(result => {
+        console.log('records', result)
+        setDocuments(result)
+      })
+  }, [])
+
   const data = {
     id: 'A',
     name: 'Root',
-    children: [
-      { id: 'B', name: 'Node 1' },
-      { id: 'C', name: 'Node 23' },
-    ],
+    children: documents.map(info => (
+      { id: info.id, name: info.title }
+    ))
   }
 
   return <Tree data={data}>{TreeNode}</Tree>
