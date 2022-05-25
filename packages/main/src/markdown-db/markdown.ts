@@ -5,7 +5,7 @@ import * as O from 'fp-ts/Option'
 import { pipe } from 'fp-ts/function'
 import unified from 'unified'
 import remarkParse from 'remark-parse'
-// import remarkGfm from 'remark-gfm'
+import remarkGfm from 'remark-gfm'
 import * as TE from 'fp-ts/lib/TaskEither'
 import remarkFrontmatter from 'remark-frontmatter'
 
@@ -30,7 +30,7 @@ export const parseMarkdown = (content: string) =>
     () => unified()
       .use(remarkParse)
       .use(remarkFrontmatter, ['toml'])
-      // .use(remarkGfm)
+      .use(remarkGfm)
       .process(content),
     reason => new Error(`${reason}`)
   )
