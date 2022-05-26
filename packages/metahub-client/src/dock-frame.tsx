@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { DockLayout, TabBase } from 'rc-dock'
 import 'rc-dock/dist/rc-dock.css'
-import { DropDirection, LayoutBase, TabData } from 'rc-dock/src/DockData'
+import { DropDirection, LayoutBase, LayoutData, TabData } from 'rc-dock/src/DockData'
 import { CreatePanel, DefaultPanels } from './types'
 import { fallbackPanel } from './panel-utility'
 import { pipe } from 'fp-ts/function'
@@ -24,12 +24,12 @@ const defaultLayout = (): LayoutBase => ({
             ]
           },
           {
+            panelLock: {},
             // panelLock: {widthFlex: 100000},
             mode: 'vertical',
             size: 1000,
-            tabs: [
-            ]
-          },
+            tabs: []
+          } as any,
           {
             mode: 'vertical',
             size: 200,
@@ -63,7 +63,8 @@ export const DockFrame = (props: Props) => {
 
   return (
     <DockLayout
-      layout={layout}
+      // layout={layout}
+      defaultLayout={layout as any}
       loadTab={loadTab}
       onLayoutChange={onLayoutChange}
       style={{
