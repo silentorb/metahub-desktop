@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Tree } from 'react-arborist'
-import { TreeNode } from './tree-node'
+import { TreeNode, TreeNodeData } from './tree-node'
 import { RecordInfo } from 'metahub-protocol'
-import { DatabaseProps, withDatabase } from './contexts'
+import { DatabaseProps, withDatabase } from './database'
+import { TreeProps } from 'react-arborist/dist/types'
 
 interface Props extends DatabaseProps {
 
@@ -22,12 +23,10 @@ export const RecordTree = withDatabase((props: Props) => {
     }, [])
 
     const data = {
-      id: 'A',
+      id: '.',
       name: 'Root',
-      children: documents.map(info => (
-        { id: info.id, name: info.title }
-      ))
-    }
+      children: documents,
+    } as any
 
     return <Tree data={data}>{TreeNode}</Tree>
   }

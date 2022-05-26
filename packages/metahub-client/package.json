@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "dependencies": {
+    "fp-ts": "^2.12.1",
+    "metahub-markdown": "1.0.0",
     "metahub-protocol": "1.0.0",
     "rc-dock": "^3.2.10",
     "react": "^17.0.2",

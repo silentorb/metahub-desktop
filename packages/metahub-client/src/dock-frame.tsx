@@ -1,29 +1,71 @@
-import React from 'react'
-import { DockLayout, LayoutData } from 'rc-dock'
+import React, { useState } from 'react'
+import { DockLayout, TabBase } from 'rc-dock'
 import 'rc-dock/dist/rc-dock.css'
-import { RecordTree } from './record-tree'
+import { DropDirection, LayoutBase, TabData } from 'rc-dock/src/DockData'
+import { CreatePanel, DefaultPanels } from './types'
+import { fallbackPanel } from './panel-utility'
+import { pipe } from 'fp-ts/function'
+import * as O from 'fp-ts/lib/Option'
 
 interface Props {
+  createPanel: CreatePanel
 }
 
-export const DockFrame = (props: Props) => {
-  const defaultLayout: LayoutData = {
+const defaultLayout = (): LayoutBase => ({
     dockbox: {
       mode: 'horizontal',
       children:
         [
           {
+            mode: 'vertical',
+            size: 200,
             tabs: [
-              { id: 'tab1', title: 'tab1', content: <RecordTree /> }
+              { id: DefaultPanels.workspace }
+            ]
+          },
+          {
+            // panelLock: {widthFlex: 100000},
+            mode: 'vertical',
+            size: 1000,
+            tabs: [
+            ]
+          },
+          {
+            mode: 'vertical',
+            size: 200,
+            tabs: [
+              { id: DefaultPanels.structure }
             ]
           }
         ]
     }
   }
+)
+
+export const DockFrame = (props: Props) => {
+  const { createPanel } = props
+  const [layout, setLayout] = useState<LayoutBase>(defaultLayout())
+  const onLayoutChange = (newLayout: LayoutBase, currentTabId?: string, direction?: DropDirection) => {
+    console.log(currentTabId, newLayout, direction)
+    if (currentTabId === 'protect1' && direction === 'remove') {
+      alert('removal of this tab is rejected')
+    } else {
+      setLayout(newLayout)
+    }
+  }
+
+  const loadTab = ({ id }: TabBase): TabData => id
+    ? pipe(
+      createPanel(id),
+      O.getOrElse(() => fallbackPanel(id))
+    )
+    : fallbackPanel(id)
 
   return (
     <DockLayout
-      defaultLayout={defaultLayout}
+      layout={layout}
+      loadTab={loadTab}
+      onLayoutChange={onLayoutChange}
       style={{
         position: 'absolute',
         left: 10,

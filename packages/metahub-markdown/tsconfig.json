@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "es2020",
+    "outDir": "../../dist/node_modules/metahub-markdown",
+    "declarationMap": true,
+    "module": "CommonJS",
+    "strict": true,
+    "rootDir": "./src",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "tsBuildInfoFile": "../../dist/node_modules/metahub-markdown/tsconfig.tsbuildinfo"
+  },
+  "include": ["./src/**/*", "./test/**/*", "src/package.json"],
+  "exclude": ["node_modules"]
+}

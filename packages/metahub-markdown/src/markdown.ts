@@ -1,4 +1,3 @@
-import { MarkdownTree } from './types'
 import { RecordInfo } from 'metahub-protocol'
 import { Option } from 'fp-ts/Option'
 import { pipe } from 'fp-ts/function'
@@ -10,6 +9,7 @@ import * as A from 'fp-ts/lib/Array'
 import { Node, Parent } from 'unist'
 import { Heading, Text } from 'mdast'
 import { Predicate } from 'fp-ts/Predicate'
+import { Either } from 'fp-ts/lib/Either'
 
 export function findFirstAndCast<A2, C>(predicate: Predicate<A2 | C>): <B extends A2>(bs: Array<B>) => Option<C> {
   return A.findFirst(predicate) as <B extends A2>(bs: Array<B>) => Option<C>
@@ -31,19 +31,19 @@ export function getMarkdownTitleOrUndefined(content: Parent): Option<string> {
   )
 }
 
-export function getMarkdownTitle(content: MarkdownTree, info: Omit<RecordInfo, 'title'>): string {
+export function getMarkdownTitle(content: Parent, info: Omit<RecordInfo, 'title'>): string {
   return pipe(
     getMarkdownTitleOrUndefined(content),
     O.getOrElse(() => info.path[info.path.length - 1])
   )
 }
 
-export const parseMarkdown = (content: string) =>
+export const parseMarkdown = (content: string): Either<Error, Parent> =>
   E.tryCatch(
     () => unified()
       .use(remarkParse)
       // .use(remarkFrontmatter, ['toml'])
       // .use(remarkGfm)
-      .parse(content),
+      .parse(content) as Parent,
     reason => new Error(`${reason}`)
   )

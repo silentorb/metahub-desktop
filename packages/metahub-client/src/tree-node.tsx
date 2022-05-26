@@ -4,9 +4,13 @@ import { ChevronDown, ChevronRight, FileText, Folder } from 'react-feather';
 import { NodeHandlers } from 'react-arborist';
 import styled from 'styled-components'
 import { NodeRendererProps } from 'react-arborist/dist/types'
+import { NavigationProps, withNavigation } from './navigation'
+import { RecordInfo } from 'metahub-protocol'
 
-const size = 16;
-const color = '#999';
+const size = 16
+const color = '#999'
+
+export type TreeNodeData = RecordInfo & { children: TreeNodeData[] }
 
 const TreeRow = styled.div`
   font-size: 14px;
@@ -82,14 +86,14 @@ const TreeRowSpacer = styled.div`
 
 function MaybeToggleButton({ toggle, isOpen, isFolder, isSelected }: any) {
   if (isFolder) {
-    const Icon = isOpen ? ChevronDown : ChevronRight;
+    const Icon = isOpen ? ChevronDown : ChevronRight
     return (
       <TreeRowButton tabIndex={-1} onClick={toggle}>
         <Icon size={12} stroke={isSelected ? 'white' : color}/>
       </TreeRowButton>
-    );
+    )
   } else {
-    return <TreeRowSpacer/>;
+    return <TreeRowSpacer/>
   }
 }
 
@@ -103,7 +107,7 @@ function Icon({ isFolder, isSelected }: any) {
         fill={isSelected ? 'white' : 'cornflowerblue'}
         size={size}
       />
-    );
+    )
   } else {
     return (
       <FileText
@@ -113,76 +117,83 @@ function Icon({ isFolder, isSelected }: any) {
         fill="none"
         size={size}
       />
-    );
+    )
   }
 }
 
-export const TreeNode = ({
-                           innerRef,
-                           data,
-                           styles,
-                           state,
-                           handlers,
-                           tree,
-                         }: NodeRendererProps<any>) => {
-  const folder = Array.isArray(data.children);
-  const open = state.isOpen;
-  const name = data.name;
+type Props = NodeRendererProps<TreeNodeData> & NavigationProps
 
-  return (
-    <TreeRow
-      ref={innerRef}
-      style={styles.row}
-      className={classNames('row', state)}
-      onClick={(e) => handlers.select(e, { selectOnClick: true })}
-    >
-      <TreeRowContents className="row-contents" style={styles.indent}>
-        <MaybeToggleButton
-          toggle={handlers.toggle}
-          isOpen={open}
-          isFolder={folder}
-          isSelected={state.isSelected}
-        />
-        <TreeRowIcon>
-          <Icon isFolder={folder} isSelected={state.isSelected}/>
-        </TreeRowIcon>
-        {state.isEditing ? (
-          <RenameForm defaultValue={name} {...handlers} />
-        ) : (
-          <span>
+export const TreeNode = withNavigation((props: Props) => {
+    const {
+      navigateTo,
+      innerRef,
+      data,
+      styles,
+      state,
+      handlers,
+      tree,
+    } = props
+    const folder = Array.isArray(data.children)
+    const open = state.isOpen
+    const name = data.title
+
+    return (
+      <TreeRow
+        ref={innerRef}
+        style={styles.row}
+        className={classNames('row', state)}
+        onClick={(e) => handlers.select(e, { selectOnClick: true })}
+      >
+        <TreeRowContents className="row-contents" style={styles.indent} onDoubleClick={() => {
+          navigateTo({ type: 'document', data: data.id})
+        }}>
+          <MaybeToggleButton
+            toggle={handlers.toggle}
+            isOpen={open}
+            isFolder={folder}
+            isSelected={state.isSelected}
+          />
+          <TreeRowIcon>
+            <Icon isFolder={folder} isSelected={state.isSelected}/>
+          </TreeRowIcon>
+          {state.isEditing ? (
+            <RenameForm defaultValue={name} {...handlers} />
+          ) : (
+            <span>
             {name}{' '}
-            {state.isSelected && (
-              <TreeRowButton style={{ display: 'inline' }} onClick={handlers.edit}>
-                ✍️
-              </TreeRowButton>
-            )}
+              {state.isSelected && (
+                <TreeRowButton style={{ display: 'inline' }} onClick={handlers.edit}>
+                  ✍️
+                </TreeRowButton>
+              )}
           </span>
-        )}
-      </TreeRowContents>
-    </TreeRow>
-  );
-};
+          )}
+        </TreeRowContents>
+      </TreeRow>
+    )
+  }
+)
 
-type FormProps = { defaultValue: string } & NodeHandlers;
+type FormProps = { defaultValue: string } & NodeHandlers
 
 function RenameForm({ defaultValue, submit, reset }: FormProps) {
   const inputProps = {
     defaultValue,
     autoFocus: true,
     onBlur: (e: FocusEvent<HTMLInputElement>) => {
-      submit(e.currentTarget.value);
+      submit(e.currentTarget.value)
     },
     onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => {
       switch (e.key) {
         case 'Enter':
-          submit(e.currentTarget.value);
-          break;
+          submit(e.currentTarget.value)
+          break
         case 'Escape':
-          reset();
-          break;
+          reset()
+          break
       }
     },
-  };
+  }
 
-  return <TreeRowInput type="text" {...inputProps} />;
+  return <TreeRowInput type="text" {...inputProps} />
 }

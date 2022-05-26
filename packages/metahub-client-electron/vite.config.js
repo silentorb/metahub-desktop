@@ -28,13 +28,20 @@ module.exports = {
   root: './',
   base: './',
   optimizeDeps: {
-    include: ['metahub-protocol']
+    include: [
+      'metahub-protocol',
+      'metahub-markdown',
+    ]
   },
   build: {
     sourcemap: true,
     outDir: 'dist/client',
     commonjsOptions: {
-      include: [/metahub-protocol/, /node_modules/]
+      include: [
+        /metahub-protocol/,
+        /metahub-markdown/,
+        /node_modules/,
+      ],
     }
   },
   plugins: [].concat(reactConfiguration),

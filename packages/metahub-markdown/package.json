@@ -1,0 +1,21 @@
+{
+  "name": "metahub-markdown",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "author": "Christopher W. Johnson",
+  "license": "MIT",
+  "dependencies": {
+    "fp-ts": "^2.12.1",
+    "metahub-protocol": "1.0.0",
+    "remark": "^13.0.0",
+    "remark-parse": "^9.0.0",
+    "remark-frontmatter": "^3.0.0",
+    "remark-gfm": "^1.0.0",
+    "unified": "^9.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.35",
+    "typescript": "^4.6.4"
+  }
+}

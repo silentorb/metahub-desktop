@@ -5,7 +5,7 @@ module.exports = {
   root: './',
   base: './',
   build: {
-    sourcemap: true,
+    sourcemap: false,
     outDir: 'dist/preload',
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),

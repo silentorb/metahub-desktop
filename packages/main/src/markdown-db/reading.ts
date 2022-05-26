@@ -7,34 +7,20 @@ import * as O from 'fp-ts/Option'
 import { pipe } from 'fp-ts/function'
 import * as TE from 'fp-ts/lib/TaskEither'
 import * as T from 'fp-ts/lib/TaskEither'
-import { getMarkdownTitle, parseMarkdown } from './markdown'
+import { getMarkdownTitle, parseMarkdown } from 'metahub-markdown'
 import * as R from 'fp-ts/lib/Record'
 import { VFile } from 'vfile'
 import { TaskEither } from 'fp-ts/lib/TaskEither'
-import { Node } from 'unist'
+import { Parent } from 'unist'
 
-export type ContentLoader<T> = (file: string) => T
-
-interface Article {
-  content: string
-  data: any
-}
-
-// export const loadMarkDown: ContentLoader<Article> = file => {
-//   const response = matter.read(file)
-//   const { content } = response
-//   const data = { ...response.data }
-//   return { content, data }
-// }
-
-export const loadDocument = (file: string): TaskEither<Error, Node> =>
+export const loadDocument = (file: string): TaskEither<Error, Parent> =>
   pipe(
     readFile(file),
     TE.chainEitherK(parseMarkdown)
   )
 
 export async function loadDocuments(files: string[]) {
-  const result: { [key: string]: Node } = {}
+  const result: { [key: string]: Parent } = {}
   const errors = []
   for (const file of files) {
     const k = await pipe(

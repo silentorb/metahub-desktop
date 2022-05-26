@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "module": "CommonJS",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "noEmit": true,
     "jsx": "react",
     "strict": true,
