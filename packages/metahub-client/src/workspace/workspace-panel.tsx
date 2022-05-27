@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Tree } from 'react-arborist'
 import { TreeNode, TreeNodeData } from './tree-node'
 import { RecordInfo } from 'metahub-protocol'
-import { DatabaseProps, withDatabase } from './database'
-import { TreeProps } from 'react-arborist/dist/types'
+import { DatabaseProps, withDatabase } from '../data'
 
 interface Props extends DatabaseProps {
 
 }
 
-export const RecordTree = withDatabase((props: Props) => {
+export const WorkspacePanel = withDatabase((props: Props) => {
     const { database } = props
     const [documents, setDocuments] = useState([] as Array<RecordInfo>)
     useEffect(() => {

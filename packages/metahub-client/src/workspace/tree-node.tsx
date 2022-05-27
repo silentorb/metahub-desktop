@@ -2,87 +2,16 @@ import classNames from 'classnames';
 import React, { FocusEvent, KeyboardEvent } from 'react';
 import { ChevronDown, ChevronRight, FileText, Folder } from 'react-feather';
 import { NodeHandlers } from 'react-arborist';
-import styled from 'styled-components'
 import { NodeRendererProps } from 'react-arborist/dist/types'
-import { NavigationProps, withNavigation } from './navigation'
+import { NavigationProps, withNavigation } from '../navigation'
 import { RecordInfo } from 'metahub-protocol'
+import { TreeRow, TreeRowButton, TreeRowContents, TreeRowIcon, TreeRowInput, TreeRowSpacer } from './styles';
+import { useRecoilState } from 'recoil'
 
 const size = 16
 const color = '#999'
 
 export type TreeNodeData = RecordInfo & { children: TreeNodeData[] }
-
-const TreeRow = styled.div`
-  font-size: 14px;
-  cursor: default;
-  user-select: none;
-  align-items: center;
-  white-space: nowrap;
-  position: relative;
-  display: flex;
-
-  &.isSelected .row-contents {
-    background: cornflowerblue;
-    color: white;
-  }
-
-  &.isSelectedStart .row-contents {
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-  }
-
-  &.isSelectedEnd .row-contents {
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
-  }
-
-  &.isOverFolder .row-contents {
-    background: hsla(0 0% 0% / 0.05);
-  }
-`
-
-const TreeRowContents = styled.div`
-  font-size: 13px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  margin: 0 12px;
-  width: 100%;
-  border: 2px solid transparent;
-  border-radius: 4px;
-
-`
-
-const TreeRowIcon = styled.i`
-  margin-right: 6px;
-  display: flex;
-  align-items: center;
-`
-
-const TreeRowButton = styled.button`
-  border: none;
-  background: none;
-  display: flex;
-  align-items: center;
-  padding: 0;
-  width: 14px;
-`
-
-const TreeRowInput = styled.input`
-  display: block;
-  width: 100%;
-  flex: 1;
-  border: none;
-  box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.2);
-  padding-left: 4px;
-  margin: -4px 1px -4px -4px;
-  height: 100%;
-  outline: none;
-`
-
-const TreeRowSpacer = styled.div`
-  width: 14px;
-`
 
 function MaybeToggleButton({ toggle, isOpen, isFolder, isSelected }: any) {
   if (isFolder) {
@@ -145,7 +74,7 @@ export const TreeNode = withNavigation((props: Props) => {
         onClick={(e) => handlers.select(e, { selectOnClick: true })}
       >
         <TreeRowContents className="row-contents" style={styles.indent} onDoubleClick={() => {
-          navigateTo({ type: 'document', data: data.id})
+          navigateTo(data.id)
         }}>
           <MaybeToggleButton
             toggle={handlers.toggle}

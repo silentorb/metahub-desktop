@@ -1,3 +1,4 @@
+const { defineConfig } = require('vite')
 
 // Currently the only way to see styled component names while debugging is to use a babel plugin.
 // Vite doesn't normally need babel.
@@ -20,29 +21,35 @@ function newReactConfiguration() {
   })
 }
 
-const reactConfiguration = process.env.NODE_ENV === 'development'
-  ? [newReactConfiguration()]
-  : []
+module.exports = defineConfig(({ mode }) => {
+  const isProd = mode === 'production '
+  console.log('isProd', isProd)
 
-module.exports = {
-  root: './',
-  base: './',
-  optimizeDeps: {
-    include: [
-      'metahub-protocol',
-      'metahub-markdown',
-    ]
-  },
-  build: {
-    sourcemap: true,
-    outDir: 'dist/client',
-    commonjsOptions: {
+  const reactConfiguration = isProd
+    ? []
+    : [newReactConfiguration()]
+
+  return {
+    root: './',
+    base: './',
+    optimizeDeps: {
       include: [
-        /metahub-protocol/,
-        /metahub-markdown/,
-        /node_modules/,
-      ],
-    }
-  },
-  plugins: [].concat(reactConfiguration),
-}
+        'metahub-protocol',
+        'metahub-markdown',
+      ]
+    },
+    build: {
+      sourcemap: true,
+      outDir: 'dist/client',
+      minify: isProd ? 'esbuild' : undefined,
+      commonjsOptions: {
+        include: [
+          /metahub-protocol/,
+          /metahub-markdown/,
+          /node_modules/,
+        ],
+      }
+    },
+    plugins: [].concat(reactConfiguration),
+  }
+})

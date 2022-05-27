@@ -30,7 +30,6 @@ export interface DataWriter<T> {
 }
 
 export interface DataSource<T> extends DataReader<T>, DataWriter<T> {
-
 }
 
 export interface DataDocument {

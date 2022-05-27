@@ -1,7 +1,7 @@
 import React from 'react'
 import { DocumentDatabase } from 'metahub-protocol'
 import { DatabaseStub } from './database-stub'
-import { contextWrapper } from './utility'
+import { contextWrapper } from '../utility'
 
 export interface DatabaseProps {
   database: DocumentDatabase

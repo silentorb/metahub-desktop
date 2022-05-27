@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { DockFrame } from './dock-frame'
+import { builtinPanelCreators, DockFrame, routePanelCreation } from './paneling'
 import './styles.css'
 import { AppServices } from './types'
-import { DatabaseContext } from './database'
+import { DatabaseContext } from './data'
 import { NavigationContext, newNavigationProps } from './navigation'
-import { builtinPanelCreators, routePanelCreation } from './panel-creation'
+import { RecoilRoot } from 'recoil'
 
 interface Props {
   services: AppServices
@@ -17,11 +17,13 @@ const App = (props: Props) => {
 
   return (
     <div>
-      <DatabaseContext.Provider value={{ database }}>
-        <NavigationContext.Provider value={newNavigationProps()}>
-          <DockFrame createPanel={createPanel}/>
-        </NavigationContext.Provider>
-      </DatabaseContext.Provider>
+      <RecoilRoot>
+        <DatabaseContext.Provider value={{ database }}>
+          <NavigationContext.Provider value={newNavigationProps()}>
+            <DockFrame createPanel={createPanel}/>
+          </NavigationContext.Provider>
+        </DatabaseContext.Provider>
+      </RecoilRoot>
     </div>
   )
 }
