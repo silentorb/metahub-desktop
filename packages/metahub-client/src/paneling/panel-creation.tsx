@@ -1,16 +1,17 @@
-import { WorkspacePanel } from '../workspace'
 import React from 'react'
+import { WorkspacePanel } from '../workspace'
 import { none, some } from 'fp-ts/Option'
-import { TabData } from 'rc-dock/src/DockData'
+import { TabData } from 'rc-dock'
 import * as A from 'fp-ts/lib/Array'
 import { pipe } from 'fp-ts/function'
 import { commonPanel } from './panel-utility'
 import { CreatePanel, DefaultPanels } from './types'
+import { MarkdownEditor } from '../markdown-editor/markdown-editor'
 
 export type PanelCreatorById = (panelId: string, creator: () => TabData) => CreatePanel
-export const panelCreatorById: PanelCreatorById = (panelId, creator) => id =>
-  id === panelId
-    ? some({ id, ...creator() })
+export const panelCreatorById: PanelCreatorById = (panelId, creator) => navigation =>
+  navigation.id === panelId
+    ? some({ id: navigation.id, ...creator() })
     : none
 
 export const workspacePanelCreator = panelCreatorById(
@@ -18,16 +19,23 @@ export const workspacePanelCreator = panelCreatorById(
   () => ({ ...commonPanel, title: 'Workspace', content: <WorkspacePanel/> })
 )
 
-export const documentPanelCreator: CreatePanel = id =>
-  some({
-    ...commonPanel,
-    id,
-    title: id,
-    content: <div></div>,
-  })
+export const structurePanelCreator = panelCreatorById(
+  DefaultPanels.structure,
+  () => ({ ...commonPanel, title: 'Structure', content: <div/> })
+)
+export const documentPanelCreator: CreatePanel = navigation =>
+  navigation.title
+    ? some({
+      ...commonPanel,
+      id: navigation.id,
+      title: navigation.title,
+      content: <MarkdownEditor id={navigation.id}></MarkdownEditor>,
+    })
+    : none
 
 export const builtinPanelCreators = (): CreatePanel[] => [
   workspacePanelCreator,
+  structurePanelCreator,
   documentPanelCreator,
 ]
 

@@ -2,33 +2,18 @@ import React from 'react'
 import { contextWrapper } from './utility'
 import { invokeEvent, TypedEventType } from 'happening-react'
 
-// export interface DocumentOrViewLocation {
-//   type: 'document',
-//   id: string
-// }
-//
-// export interface ViewLocation {
-//   type: 'view',
-//   id: string
-// }
-//
-// export type NoneLocation = {
-//   type: 'none',
-//   id: void,
-// }
+export interface NavigationEvent {
+  id: string
+  title?: string
+}
 
 export const noneLocation: UiLocation = '~/none'
 
 export type UiLocation = string
 
-export const navigationEvent: TypedEventType<UiLocation> = () => 'navigateTo'
+export const navigationEvent: TypedEventType<NavigationEvent> = () => 'navigateTo'
 
-// export const focusedViewState = atom<NavigationLocation>({
-//   key: 'focusedView',
-//   default: noneLocation,
-// })
-
-export type NavigateTo = (location: UiLocation) => void
+export type NavigateTo = (navigation: NavigationEvent) => void
 
 export interface NavigationProps {
   navigateTo: NavigateTo
@@ -43,8 +28,8 @@ export const withNavigation = contextWrapper(NavigationContext)
 
 export function newNavigationProps(): NavigationProps {
   return {
-    navigateTo: (location) => {
-      invokeEvent(navigationEvent, location)
+    navigateTo: (navigation) => {
+      invokeEvent(navigationEvent, navigation)
     }
   }
 }

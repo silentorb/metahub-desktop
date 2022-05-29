@@ -1,22 +1,28 @@
+import { Either } from './fp'
+
 export type RecordPath = string
 
 export type NonEmptyArray<T> = [T, ...T[]]
 export type NonEmptyStringArray = NonEmptyArray<string>
 
 export type ResponseBundle<T> = [undefined, T] | [Error, undefined]
-export type AsyncResponse<T> = Promise<ResponseBundle<T>>
 
-export interface RecordInfo {
+export interface DocumentInfo {
   id: string
-  path: NonEmptyStringArray
-  storagePath: string
   title: string
 }
 
-export interface DataReader<T> {
-  getAllRecords(): AsyncResponse<RecordInfo[]>
+export interface RecordInfo extends DocumentInfo {
+  path: NonEmptyStringArray
+  storagePath: string
+}
 
-  getRecordContent(): AsyncResponse<T>
+export type AsyncResponse<T> = Promise<Either<Error, T>>
+
+export interface DataReader<T> {
+  getAllRecords(): AsyncResponse<DocumentInfo[]>
+
+  getRecordContent(id: string): AsyncResponse<T>
 }
 
 export interface DataWriter<T> {
@@ -32,10 +38,13 @@ export interface DataWriter<T> {
 export interface DataSource<T> extends DataReader<T>, DataWriter<T> {
 }
 
-export interface DataDocument {
-  info: RecordInfo
-  metadata?: any
+export interface DocumentContents {
   content?: any
+  textContent: string
+}
+
+export interface DataDocument extends DocumentInfo, DocumentContents {
+  metadata?: any
 }
 
 export type DocumentDatabase = DataSource<DataDocument>

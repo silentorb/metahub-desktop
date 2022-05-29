@@ -2,15 +2,15 @@ import {
   AsyncResponse,
   DataDocument,
   DocumentDatabase,
-  newErrorResponse,
-  newSuccessResponse,
   RecordInfo,
-  voidSuccessResponse
 } from 'metahub-protocol'
+import { left, right } from 'fp-ts/Either'
+
+const voidSuccessResponse = right(undefined)
 
 export class DatabaseStub implements DocumentDatabase {
   async getRecordContent(): AsyncResponse<DataDocument> {
-    return newErrorResponse(Error('No database implementation is yet initialized'))
+    return left(new Error('No database implementation is yet initialized'))
   }
 
   async writeRecord(path: string, content: DataDocument): AsyncResponse<void> {
@@ -26,11 +26,11 @@ export class DatabaseStub implements DocumentDatabase {
   }
 
   async getAllRecords(): AsyncResponse<RecordInfo[]> {
-    return newSuccessResponse([])
+    return right([])
   }
 
   async moveRecord(previous: string, next: string): AsyncResponse<void> {
-    return newSuccessResponse(undefined)
+    return right(undefined)
   }
 
 }

@@ -2,14 +2,19 @@ import { contextBridge, ipcRenderer } from 'electron'
 
 const functions = () => [
   'getAllRecords',
+  'getRecordContent',
+  'copyRecord',
+  'deleteRecord',
+  'moveRecord',
+  'writeRecord',
 ]
 
 const formatFunctions = () =>
   functions().reduce<{ [key: string]: any }>((a, f) => {
-    a[f] = () => ipcRenderer.invoke(f)
+    a[f] = (...args: any[]) => ipcRenderer.invoke(f, ...args)
     return a
   }, {})
 
-contextBridge.exposeInMainWorld('electronAPI', formatFunctions())
-
-export const dummy = 1
+export function intializeMetaHubBridgeApi() {
+  contextBridge.exposeInMainWorld('electronAPI', formatFunctions())
+}

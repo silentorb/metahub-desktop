@@ -7,12 +7,12 @@ export interface ServerConfig {
 
 export interface Server {
   config: ServerConfig
-  db: DataSource<any>
+  database: DataSource<any>
 }
 
 export function newServer(config: ServerConfig): Server {
   return {
     config,
-    db: new MarkdownDatabase(config.database)
+    database: new MarkdownDatabase(config.database)
   }
 }

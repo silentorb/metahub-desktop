@@ -2,8 +2,9 @@
   "name": "metahub-client",
   "version": "1.0.0",
   "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "MIT",
   "dependencies": {
-    "@toast-ui/react-editor": "^3.1.7",
     "fp-ts": "^2.12.1",
     "metahub-markdown": "1.0.0",
     "metahub-protocol": "1.0.0",
@@ -13,6 +14,7 @@
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.9",
     "recoil": "^0.7.3-alpha.2",
+    "rich-markdown-editor": "^11.21.3",
     "styled-components": "^5.3.5"
   },
   "devDependencies": {

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Tree } from 'react-arborist'
-import { TreeNode, TreeNodeData } from './tree-node'
-import { RecordInfo } from 'metahub-protocol'
+import { TreeNode } from './tree-node'
+import { DocumentInfo } from 'metahub-protocol'
 import { DatabaseProps, withDatabase } from '../data'
+import * as E from 'fp-ts/lib/Either'
+import { pipe } from 'fp-ts/function'
 
 interface Props extends DatabaseProps {
 
@@ -10,13 +12,17 @@ interface Props extends DatabaseProps {
 
 export const WorkspacePanel = withDatabase((props: Props) => {
     const { database } = props
-    const [documents, setDocuments] = useState([] as Array<RecordInfo>)
+    const [documents, setDocuments] = useState([] as Array<DocumentInfo>)
     useEffect(() => {
       database.getAllRecords()
-        .then(([error, result]) => {
-          console.log('records', result)
-          if (result) {
-            setDocuments(result)
+        .then(response => {
+          const records = pipe(
+            response,
+            E.getOrElse(() => new Array<DocumentInfo>)
+          )
+          console.log('records', records)
+          if (records) {
+            setDocuments(records)
           }
         })
     }, [])

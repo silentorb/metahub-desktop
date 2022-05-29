@@ -6,7 +6,6 @@ import { NodeRendererProps } from 'react-arborist/dist/types'
 import { NavigationProps, withNavigation } from '../navigation'
 import { RecordInfo } from 'metahub-protocol'
 import { TreeRow, TreeRowButton, TreeRowContents, TreeRowIcon, TreeRowInput, TreeRowSpacer } from './styles';
-import { useRecoilState } from 'recoil'
 
 const size = 16
 const color = '#999'
@@ -74,7 +73,8 @@ export const TreeNode = withNavigation((props: Props) => {
         onClick={(e) => handlers.select(e, { selectOnClick: true })}
       >
         <TreeRowContents className="row-contents" style={styles.indent} onDoubleClick={() => {
-          navigateTo(data.id)
+          const { id, title } = data
+          navigateTo({ id, title })
         }}>
           <MaybeToggleButton
             toggle={handlers.toggle}

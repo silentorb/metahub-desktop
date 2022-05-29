@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "module": "CommonJS",
-    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "jsx": "react",
     "strict": true,
     "sourceMap": true,
     "declaration": false,
+    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "lib": [
       "es2020",
@@ -14,9 +15,8 @@
     ]
   },
   "include": ["./src/**/*", "./test/**/*"],
-  "exclude": ["node_modules"],
+  "exclude": ["*/node_modules"],
   "references": [
-    {"path": "../metahub-client-electron"},
     {"path": "../metahub-markdown"},
     {"path": "../metahub-protocol"}
   ]

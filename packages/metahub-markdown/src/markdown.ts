@@ -15,7 +15,7 @@ export function findFirstAndCast<A2, C>(predicate: Predicate<A2 | C>): <B extend
   return A.findFirst(predicate) as <B extends A2>(bs: Array<B>) => Option<C>
 }
 
-export function getMarkdownTitleOrUndefined(content: Parent): Option<string> {
+export function getOptionalMarkdownTitle(content: Parent): Option<string> {
   const h1: Option<Heading> = pipe(
     content.children,
     findFirstAndCast<Node, Heading>(child => 'depth' in child && child.type === 'heading' && child.depth === 1),
@@ -31,9 +31,9 @@ export function getMarkdownTitleOrUndefined(content: Parent): Option<string> {
   )
 }
 
-export function getMarkdownTitle(content: Parent, info: Omit<RecordInfo, 'title'>): string {
+export function getMarkdownTitleOrFilename(content: Parent, info: Omit<RecordInfo, 'title'>): string {
   return pipe(
-    getMarkdownTitleOrUndefined(content),
+    getOptionalMarkdownTitle(content),
     O.getOrElse(() => info.path[info.path.length - 1])
   )
 }

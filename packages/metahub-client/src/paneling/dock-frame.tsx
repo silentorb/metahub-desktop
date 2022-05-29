@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
-import { DockLayout, TabBase } from 'rc-dock'
+import { DockLayout, DropDirection, LayoutBase, TabBase, TabData } from 'rc-dock'
 import 'rc-dock/dist/rc-dock.css'
-import { DropDirection, LayoutBase, TabData } from 'rc-dock/src/DockData'
 import { fallbackPanel } from './panel-utility'
 import { pipe } from 'fp-ts/function'
 import * as O from 'fp-ts/lib/Option'
 import { CreatePanel, DefaultPanels } from './types'
-import { navigationEvent, noneLocation, UiLocation } from '../navigation'
+import { NavigationEvent, navigationEvent, noneLocation } from '../navigation'
 import { useEventListener } from 'happening-react'
-
-// const Algorithm = require('rc-dock/lib/Algorithm')
 import * as Algorithm from 'rc-dock/lib/Algorithm'
 
 interface Props {
@@ -47,25 +44,24 @@ const defaultLayout: LayoutBase = {
   }
 }
 
-const createPanelTab = (createPanel: CreatePanel, location: UiLocation) =>
+const createPanelTab = (createPanel: CreatePanel, navigation: NavigationEvent) =>
   pipe(
-    createPanel(location as UiLocation),
-    O.getOrElse(() => fallbackPanel(location))
+    createPanel(navigation),
+    O.getOrElse(() => fallbackPanel(navigation.id))
   )
 
 export const DockFrame = (props: Props) => {
   const { createPanel } = props
   const [layout, setLayout] = useState<LayoutBase>(defaultLayout)
 
-  const loadTab = (tab: TabBase): TabData => {
-    const [type, id] = tab.id ? tab.id.split('@~@') : []
-    const location = { type, id }
-    return createPanelTab(createPanel, tab.id || noneLocation)
-  }
+  const loadTab = (tab: TabBase | TabData): TabData =>
+    'content' in tab
+      ? tab
+      : createPanelTab(createPanel, tab.id ? tab as any : { id: noneLocation })
 
-  useEventListener(navigationEvent, location => {
+  useEventListener(navigationEvent, navigation => {
     // if (location.type === 'document') {
-    const tab = loadTab({ id: location })
+    const tab = loadTab(navigation)
     const panel = layout.dockbox.children[1]
     const nextLayout = Algorithm.addTabToPanel(layout as any, tab, panel as any)
     setLayout(nextLayout)

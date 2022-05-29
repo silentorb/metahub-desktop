@@ -7,6 +7,7 @@ module.exports = {
   build: {
     sourcemap: false,
     outDir: 'dist/preload',
+    minify: false,
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       fileName: (format) => `preload.js`,

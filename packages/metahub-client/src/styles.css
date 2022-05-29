@@ -12,3 +12,8 @@ body {
 * {
     box-sizing: border-box;
 }
+
+.dock-content-animated {
+    /* Override the incredibly distracting rc-dock transition animation */
+    transition: none !important;
+}

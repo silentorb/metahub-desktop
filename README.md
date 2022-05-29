@@ -17,7 +17,7 @@
 * Initially focus on personal information management
 * Have a permissive open source license
 * Be Git friendly
-* Store data locally as Markdown/JSON/YAML
+* Store data locally as Markdown/JSON/TOML
 * Employ robust information architecture principles
 * Reuse existing technologies as much as possible, even if that means omitting some advanced features
 

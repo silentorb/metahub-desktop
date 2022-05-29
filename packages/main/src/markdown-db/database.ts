@@ -1,42 +1,43 @@
-import {
-  AsyncResponse,
-  DataDocument,
-  DataSource,
-  newSuccessResponse,
-  RecordInfo,
-  RecordPath,
-  voidSuccessResponse
-} from 'metahub-protocol'
-import { gatherFiles } from './reading'
+import { AsyncResponse, DataDocument, DataSource, DocumentInfo, RecordPath, } from 'metahub-protocol'
+import { gatherFiles, loadDocument } from './reading'
 import { MarkdownDatabaseCache, MarkdownDatabaseConfig } from './types'
 import { updateRecord } from './writing'
+import { right } from 'fp-ts/lib/Either'
+import * as path from 'path'
+
+const voidSuccessResponse = right(undefined)
 
 export class MarkdownDatabase implements DataSource<DataDocument> {
   config: MarkdownDatabaseConfig
+  root: string
   cache: MarkdownDatabaseCache = {
     index: {}
   }
 
   constructor(config: MarkdownDatabaseConfig) {
     this.config = config
+    this.root = path.resolve(config.path).replace(/\\/g, '/')
+  }
+
+  getDocumentPath(id: string): string {
+    return `${this.root}/${id}.md`
   }
 
   async copyRecord(previous: RecordPath, next: RecordPath): AsyncResponse<void> {
-    return voidSuccessResponse
+    return right(undefined)
   }
 
   async deleteRecord(path: RecordPath): AsyncResponse<void> {
     return voidSuccessResponse
   }
 
-  async getAllRecords(): AsyncResponse<RecordInfo[]> {
+  async getAllRecords(): AsyncResponse<DocumentInfo[]> {
     const result = await gatherFiles(this.config.path)
-    return newSuccessResponse(result.map(r => r.info))
+    return right(result)
   }
 
-  getRecordContent(): AsyncResponse<DataDocument> {
-    const result = {} as any
-    return Promise.resolve(result)
+  async getRecordContent(id: string): AsyncResponse<DataDocument> {
+    return loadDocument(id, this.getDocumentPath(id))()
   }
 
   async moveRecord(previous: RecordPath, next: RecordPath): AsyncResponse<void> {
