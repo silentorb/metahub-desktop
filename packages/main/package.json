@@ -14,6 +14,7 @@
     "commander": "^9.2.0",
     "electron": "^18.2.4",
     "fp-ts": "^2.12.1",
+    "metahub-common": "1.0.0",
     "metahub-markdown": "1.0.0",
     "metahub-protocol": "1.0.0",
     "remark": "^13.0.0",

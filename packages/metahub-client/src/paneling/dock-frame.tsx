@@ -3,7 +3,7 @@ import { DockLayout, DropDirection, LayoutBase, TabBase, TabData } from 'rc-dock
 import 'rc-dock/dist/rc-dock.css'
 import { fallbackPanel } from './panel-utility'
 import { pipe } from 'fp-ts/function'
-import * as O from 'fp-ts/lib/Option'
+import * as O from 'fp-ts/Option'
 import { CreatePanel, DefaultPanels } from './types'
 import { NavigationEvent, navigationEvent, noneLocation } from '../navigation'
 import { useEventListener } from 'happening-react'

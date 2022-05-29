@@ -1,14 +1,14 @@
-import { getFilesRecursive, readFile } from './file-operations'
+import { getFilesRecursive, readFile } from '../io'
 import { getRecordInfoFromAbsolutePath } from './path-operations'
 import { DataDocument, DocumentContents } from 'metahub-protocol'
-import * as A from 'fp-ts/lib/Array'
+import * as A from 'fp-ts/Array'
 import * as O from 'fp-ts/Option'
 import { pipe } from 'fp-ts/function'
-import * as TE from 'fp-ts/lib/TaskEither'
-import * as E from 'fp-ts/lib/Either'
+import * as TE from 'fp-ts/TaskEither'
+import { TaskEither } from 'fp-ts/TaskEither'
+import * as E from 'fp-ts/Either'
 import { getMarkdownTitleOrFilename, getOptionalMarkdownTitle, parseMarkdown } from 'metahub-markdown'
-import * as R from 'fp-ts/lib/Record'
-import { TaskEither } from 'fp-ts/lib/TaskEither'
+import * as R from 'fp-ts/Record'
 
 export const loadDocumentWithAST = (file: string): TaskEither<Error, DocumentContents> =>
   pipe(

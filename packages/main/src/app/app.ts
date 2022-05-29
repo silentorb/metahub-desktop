@@ -3,8 +3,11 @@ import { app, BrowserWindow } from 'electron'
 import { program } from 'commander'
 import path from 'path'
 import { newApi } from './api'
+import { loadWorkspaceConfig } from '../config'
 
 export function newApp(sourcePath: string) {
+  const workspace = loadWorkspaceConfig(sourcePath)
+
   const server = newServer({
       database: {
         path: sourcePath,

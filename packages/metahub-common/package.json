@@ -1,0 +1,14 @@
+{
+  "name": "metahub-common",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
+    "fp-ts": "^2.12.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.4"
+  }
+}

@@ -2,7 +2,7 @@ import { AsyncResponse, DataDocument, DataSource, DocumentInfo, RecordPath, } fr
 import { gatherFiles, loadDocument } from './reading'
 import { MarkdownDatabaseCache, MarkdownDatabaseConfig } from './types'
 import { updateRecord } from './writing'
-import { right } from 'fp-ts/lib/Either'
+import { right } from 'fp-ts/Either'
 import * as path from 'path'
 
 const voidSuccessResponse = right(undefined)

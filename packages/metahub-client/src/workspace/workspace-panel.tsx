@@ -3,7 +3,7 @@ import { Tree } from 'react-arborist'
 import { TreeNode } from './tree-node'
 import { DocumentInfo } from 'metahub-protocol'
 import { DatabaseProps, withDatabase } from '../data'
-import * as E from 'fp-ts/lib/Either'
+import * as E from 'fp-ts/Either'
 import { pipe } from 'fp-ts/function'
 
 interface Props extends DatabaseProps {

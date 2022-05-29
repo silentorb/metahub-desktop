@@ -3,7 +3,7 @@ import { DataDocument, DocumentDatabase } from 'metahub-protocol'
 import { DatabaseStub } from './database-stub'
 import { contextWrapper } from '../utility'
 import { atomFamily, selectorFamily } from 'recoil'
-import * as E from 'fp-ts/lib/Either'
+import * as E from 'fp-ts/Either'
 import { pipe } from 'fp-ts/function'
 
 export interface DatabaseProps {

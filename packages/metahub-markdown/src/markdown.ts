@@ -3,13 +3,13 @@ import { Option } from 'fp-ts/Option'
 import { pipe } from 'fp-ts/function'
 import unified from 'unified'
 import remarkParse from 'remark-parse'
-import * as E from 'fp-ts/lib/Either'
-import * as O from 'fp-ts/lib/Option'
-import * as A from 'fp-ts/lib/Array'
+import * as E from 'fp-ts/Either'
+import * as O from 'fp-ts/Option'
+import * as A from 'fp-ts/Array'
 import { Node, Parent } from 'unist'
 import { Heading, Text } from 'mdast'
 import { Predicate } from 'fp-ts/Predicate'
-import { Either } from 'fp-ts/lib/Either'
+import { Either } from 'fp-ts/Either'
 
 export function findFirstAndCast<A2, C>(predicate: Predicate<A2 | C>): <B extends A2>(bs: Array<B>) => Option<C> {
   return A.findFirst(predicate) as <B extends A2>(bs: Array<B>) => Option<C>
