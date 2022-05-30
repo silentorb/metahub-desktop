@@ -2,11 +2,9 @@ import * as fs from 'fs'
 import { flatten } from '../markdown-db/utility'
 import * as path from 'path'
 import * as TE from 'fp-ts/TaskEither'
-import * as T from 'fp-ts/Task'
-import { chainTaskK, TaskEither } from 'fp-ts/TaskEither'
+import { TaskEither } from 'fp-ts/TaskEither'
 import { pipe } from 'fp-ts/function'
 import { validateObject } from 'metahub-common'
-import { Task } from 'fp-ts/Task'
 import { Option } from 'fp-ts/Option'
 
 export function getFilesRecursive(fileOrDirectory: string): string[] {
@@ -48,6 +46,9 @@ export const readValidatedJsonFile = <T>(type: new () => T) => (filePath: string
     validateObject(type),
   )
 
-export function writeFile(filePath: string, content: string): Option<Error> {
-  return fs.promises.writeFile(filePath, content)
+export function writeFile(filePath: string, content: string): TaskEither<Error, void> {
+  return TE.tryCatch(
+    () => fs.promises.writeFile(filePath, content),
+    reason => new Error(`${reason}`),
+  )
 }

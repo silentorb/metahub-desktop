@@ -5,6 +5,7 @@ import { contextWrapper } from '../utility'
 import { atomFamily, selectorFamily } from 'recoil'
 import * as E from 'fp-ts/Either'
 import { pipe } from 'fp-ts/function'
+import { getServices } from '../api'
 
 export interface DatabaseProps {
   database: DocumentDatabase
@@ -15,12 +16,6 @@ export const DatabaseContext = React.createContext<DatabaseProps>({
 })
 
 export const withDatabase = contextWrapper(DatabaseContext)
-
-let staticDatabase: DocumentDatabase = new DatabaseStub()
-
-export function setStaticDatabase(database: DocumentDatabase) {
-  staticDatabase = database
-}
 
 export enum DocumentStatus {
   failed = 'failed',
@@ -49,7 +44,7 @@ export const documentsState = atomFamily<WrappedDocument, string>({
   default: { status: DocumentStatus.loading },
   effects: id => [
     ({ setSelf }) => {
-      staticDatabase.getRecordContent(id)
+      getServices().database.getRecordContent(id)
         .then(result => {
           const wrappedDocument = pipe(
             result,

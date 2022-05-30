@@ -3,17 +3,19 @@ import ReactDOM from 'react-dom'
 import { builtinPanelCreators, DockFrame, routePanelCreation } from './paneling'
 import './styles.css'
 import { AppServices } from './types'
-import { DatabaseContext, setStaticDatabase } from './data'
+import { DatabaseContext } from './data'
 import { NavigationContext, newNavigationProps } from './navigation'
 import { RecoilRoot } from 'recoil'
+import { setServices } from './api'
 
 interface Props {
   services: AppServices
 }
 
 const App = (props: Props) => {
-  const { database } = props.services
+  const { application, database } = props.services
   setStaticDatabase(database)
+  setServices(props.services)
   const createPanel = routePanelCreation(builtinPanelCreators())
 
   return (

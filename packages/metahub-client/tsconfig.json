@@ -17,6 +17,7 @@
   "include": ["./src/**/*", "./test/**/*"],
   "exclude": ["*/node_modules"],
   "references": [
+    {"path": "../metahub-common"},
     {"path": "../metahub-markdown"},
     {"path": "../metahub-protocol"}
   ]

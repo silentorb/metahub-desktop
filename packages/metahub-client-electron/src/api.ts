@@ -1,7 +1,8 @@
 import { DocumentDatabase } from 'metahub-protocol'
-import { AppServices } from 'metahub-client/src/types'
+import { AppServices } from 'metahub-client'
+import { Application } from 'metahub-common'
 
-export interface IElectronAPI extends DocumentDatabase {
+export interface IElectronAPI extends DocumentDatabase, Application {
 }
 
 declare global {

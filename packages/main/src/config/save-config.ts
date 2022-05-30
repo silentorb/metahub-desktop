@@ -1,16 +1,20 @@
 import { pipe } from 'fp-ts/function'
 import { getWorkspaceConfigPath } from './utility'
-import { readValidatedJsonFile, writeFile } from '../io'
+import { writeFile } from '../io'
 import { WorkspaceConfig } from 'metahub-common'
 import { Option } from 'fp-ts/Option'
-import * as TE from 'fp-ts/TaskEither'
 import * as E from 'fp-ts/Either'
+import * as TE from 'fp-ts/TaskEither'
+import { TaskEither } from 'fp-ts/TaskEither'
 
-export const saveWorkspaceConfig = (root: string) => (config: WorkspaceConfig): Option<Error> =>
+export const saveWorkspaceConfig = (root: string) => (config: WorkspaceConfig): TaskEither<Error, void> =>
   pipe(
-    E.tryCatch(
-      () => JSON.stringify(config),
-      reason => new Error(`${reason}`
-      ),
-      E.map(content => writeFile(getWorkspaceConfigPath(root), content))
-    )
+    TE.fromEither(
+      E.tryCatch(
+        () => JSON.stringify(config),
+        reason => new Error(`${reason}`
+        )
+      )
+    ),
+    TE.chain(content => writeFile(getWorkspaceConfigPath(root), content))
+  )

@@ -1,5 +1,4 @@
 import React from 'react'
-import '@toast-ui/editor/dist/toastui-editor.css'
 import { useRecoilValue } from 'recoil'
 import { documentsState, DocumentStatus } from '../data'
 import Editor from 'rich-markdown-editor'

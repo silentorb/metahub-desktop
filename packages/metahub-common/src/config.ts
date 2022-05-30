@@ -18,3 +18,7 @@ export class CWorkspaceConfig {
   @Nested(COpenDocumentConfig)
   openDocuments!: OpenDocumentConfig[]
 }
+
+export const newWorkspaceConfig = ():WorkspaceConfig => ({
+  openDocuments: []
+})

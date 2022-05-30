@@ -7,6 +7,9 @@ const functions = () => [
   'deleteRecord',
   'moveRecord',
   'writeRecord',
+
+  'loadConfig',
+  'saveConfig',
 ]
 
 const formatFunctions = () =>
