@@ -1,5 +1,5 @@
 {
-  "name": "metahub-main",
+  "name": "metahub-electron",
   "version": "0.1.0",
   "description": "",
   "main": "src/main.ts",

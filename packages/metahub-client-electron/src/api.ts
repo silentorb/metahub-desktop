@@ -12,7 +12,9 @@ declare global {
 }
 
 export function newAppServices(): AppServices {
+  const api = window.electronAPI
   return {
-    database: window.electronAPI
+    application: api,
+    database: api,
   }
 }

@@ -1,4 +1,4 @@
-import { Either } from './fp'
+import { TaskEither } from './fp'
 
 export type RecordPath = string
 
@@ -17,7 +17,7 @@ export interface RecordInfo extends DocumentInfo {
   storagePath: string
 }
 
-export type AsyncResponse<T> = Promise<Either<Error, T>>
+export type AsyncResponse<T> = TaskEither<Error, T>
 
 export interface DataReader<T> {
   getAllRecords(): AsyncResponse<DocumentInfo[]>

@@ -10,3 +10,7 @@ export interface Right<A> {
 }
 
 export declare type Either<E, A> = Left<E> | Right<A>
+export interface Task<A> {
+  (): Promise<A>
+}
+export interface TaskEither<E, A> extends Task<Either<E, A>> {}

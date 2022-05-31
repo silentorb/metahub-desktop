@@ -14,7 +14,6 @@ interface Props {
 
 const App = (props: Props) => {
   const { application, database } = props.services
-  setStaticDatabase(database)
   setServices(props.services)
   const createPanel = routePanelCreation(builtinPanelCreators())
 

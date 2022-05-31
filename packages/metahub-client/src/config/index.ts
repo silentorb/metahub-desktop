@@ -1,1 +1,1 @@
-export * from './workspace-config'
+export * from './config'

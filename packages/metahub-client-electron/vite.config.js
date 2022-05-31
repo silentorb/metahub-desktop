@@ -9,13 +9,14 @@ function newReactConfiguration() {
   return require('@vitejs/plugin-react')({
     babel: {
       plugins: [
-        [
-          'babel-plugin-styled-components',
+        ['babel-plugin-styled-components',
           {
             displayName: true,
             fileName: false
-          }
-        ]
+          },
+        ],
+        // Without this babel can not process the JSON validation metadata
+        ['@babel/plugin-proposal-decorators', { 'legacy': true }],
       ]
     }
   })

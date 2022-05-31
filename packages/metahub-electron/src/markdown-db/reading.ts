@@ -9,6 +9,7 @@ import { TaskEither } from 'fp-ts/TaskEither'
 import * as E from 'fp-ts/Either'
 import { getMarkdownTitleOrFilename, getOptionalMarkdownTitle, parseMarkdown } from 'metahub-markdown'
 import * as R from 'fp-ts/Record'
+import { Task } from 'fp-ts/Task'
 
 export const loadDocumentWithAST = (file: string): TaskEither<Error, DocumentContents> =>
   pipe(
@@ -58,23 +59,32 @@ export async function loadDocuments(files: string[]) {
   return result
 }
 
-export async function gatherFiles(root: string): Promise<DataDocument[]> {
+export function gatherFiles(root: string): TaskEither<Error, DataDocument[]> {
   const files = getFilesRecursive(root)
-  const documents = await loadDocuments(files)
-  return A.filterMap((file: string) => {
-    return pipe(
-      getRecordInfoFromAbsolutePath(file, root),
-      O.chain(info => pipe(
-        documents,
-        R.lookup(file),
-        O.map(document => ({
-          ...info,
-          ...document,
-          title: getMarkdownTitleOrFilename(document.content, info)
-        }))
-      ))
-    )
-  })(files)
+  // Eventually this can be refactored without the tryCatch
+  return TE.tryCatch(
+    async () => {
+      const documents = await loadDocuments(files)
+      return pipe(
+        files,
+        A.filterMap((file: string) =>
+          pipe(
+            getRecordInfoFromAbsolutePath(file, root),
+            O.chain(info => pipe(
+              documents,
+              R.lookup(file),
+              O.map(document => ({
+                ...info,
+                ...document,
+                title: getMarkdownTitleOrFilename(document.content, info)
+              }))
+            ))
+          )
+        )
+      )
+    },
+    reason => new Error(`${reason}`),
+  )
 }
 
 // export async function scanSourceFiles(dirPath: string) {

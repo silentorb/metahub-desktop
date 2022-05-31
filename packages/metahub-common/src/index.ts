@@ -1,3 +1,5 @@
+import 'reflect-metadata'
 export * from './application'
 export * from './config'
 export * from './validation'
+export * from './workspace'

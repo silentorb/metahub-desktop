@@ -2,10 +2,11 @@ import { AsyncResponse, DataDocument, DataSource, DocumentInfo, RecordPath, } fr
 import { gatherFiles, loadDocument } from './reading'
 import { MarkdownDatabaseCache, MarkdownDatabaseConfig } from './types'
 import { updateRecord } from './writing'
-import { right } from 'fp-ts/Either'
 import * as path from 'path'
+import * as TE from 'fp-ts/TaskEither'
+import { pipe } from 'fp-ts/function'
 
-const voidSuccessResponse = right(undefined)
+const voidSuccessResponse = TE.right(undefined)
 
 export class MarkdownDatabase implements DataSource<DataDocument> {
   config: MarkdownDatabaseConfig
@@ -23,36 +24,39 @@ export class MarkdownDatabase implements DataSource<DataDocument> {
     return `${this.root}/${id}.md`
   }
 
-  async copyRecord(previous: RecordPath, next: RecordPath): AsyncResponse<void> {
-    return right(undefined)
+  copyRecord(previous: RecordPath, next: RecordPath): AsyncResponse<void> {
+    return TE.right(undefined)
   }
 
-  async deleteRecord(path: RecordPath): AsyncResponse<void> {
+  deleteRecord(path: RecordPath): AsyncResponse<void> {
     return voidSuccessResponse
   }
 
-  async getAllRecords(): AsyncResponse<DocumentInfo[]> {
-    const result = await gatherFiles(this.config.path)
-    return right(result)
+  getAllRecords(): AsyncResponse<DocumentInfo[]> {
+    return gatherFiles(this.config.path)
   }
 
-  async getRecordContent(id: string): AsyncResponse<DataDocument> {
-    return loadDocument(id, this.getDocumentPath(id))()
+  getRecordContent(id: string): AsyncResponse<DataDocument> {
+    return loadDocument(id, this.getDocumentPath(id))
   }
 
-  async moveRecord(previous: RecordPath, next: RecordPath): AsyncResponse<void> {
+  moveRecord(previous: RecordPath, next: RecordPath): AsyncResponse<void> {
     return voidSuccessResponse
   }
 
-  async writeRecord(path: RecordPath, content: DataDocument): AsyncResponse<void> {
+  writeRecord(path: RecordPath, content: DataDocument): AsyncResponse<void> {
     const cache = this.cache
     const info = cache.index[path]
     if (info) {
-      const newInfo = await updateRecord(info, content)
-      cache.index[path] = newInfo
+      return pipe(
+        updateRecord(info, content),
+        TE.map(newInfo => {
+          cache.index[path] = newInfo
+        })
+      )
     }
 
-    return voidSuccessResponse
+    return TE.left(Error(`Could not find file info for ${path}`))
   }
 
 }

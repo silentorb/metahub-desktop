@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "CommonJS",
-    "outDir": "../../dist/main",
+    "outDir": "../../dist/metahub-electron",
     "strict": true,
     "sourceMap": true,
     "declaration": true,
