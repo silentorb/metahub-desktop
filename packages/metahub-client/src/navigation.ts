@@ -1,5 +1,5 @@
 import React from 'react'
-import { contextWrapper } from './utility'
+import { contextWrapper } from './utility/utility'
 import { invokeEvent, TypedEventType } from 'happening-react'
 
 export interface NavigationEvent {

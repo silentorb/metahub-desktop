@@ -1,8 +1,8 @@
 import React from 'react'
-import { useRecoilValue } from 'recoil'
-import { documentsState, DocumentStatus } from '../data'
+import { documentState } from '../data'
 import Editor from 'rich-markdown-editor'
 import styled from 'styled-components'
+import { useLoading } from '../utility'
 
 interface Props {
   id: string
@@ -10,27 +10,16 @@ interface Props {
 
 const DocumentMargin = styled.div`
   margin: 10px;
-  font-family: 'Open Sans';
+  font-family: 'Open Sans', sans-serif;
 `
 
 export const MarkdownEditor = (props: Props) => {
   const { id } = props
-  const content = useRecoilValue(documentsState(id))
-  console.log('content', content)
-  switch (content.status) {
-    case DocumentStatus.loading:
-      return <div>Loading</div>
-
-    case DocumentStatus.available:
-      return (
-        <DocumentMargin>
-          <Editor
-            defaultValue={content.document.textContent}
-          />
-        </DocumentMargin>
-      )
-
-    default:
-      return <div>Sorry, this document could not be loaded!</div>
-  }
+  return useLoading(documentState(id), document => (
+    <DocumentMargin>
+      <Editor
+        defaultValue={document.textContent}
+      />
+    </DocumentMargin>
+  ))
 }

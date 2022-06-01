@@ -32,7 +32,7 @@ export class MarkdownDatabase implements DataSource<DataDocument> {
     return voidSuccessResponse
   }
 
-  getAllRecords(): AsyncResponse<DocumentInfo[]> {
+  getAllRecords(): AsyncResponse<readonly DocumentInfo[]> {
     return gatherFiles(this.config.path)
   }
 

@@ -22,8 +22,10 @@ export function getFilesRecursive(fileOrDirectory: string): string[] {
       getFilesRecursive(fileOrDirectory + '/' + f)
     )
     return flatten(hierarchy)
-  } else {
+  } else if (path.extname(fullPath) == '.md') {
     return [fullPath]
+  } else {
+    return []
   }
 }
 

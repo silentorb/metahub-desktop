@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import { builtinPanelCreators, DockFrame, routePanelCreation } from './paneling'
 import './styles.css'
 import { AppServices } from './types'
-import { DatabaseContext } from './data'
 import { NavigationContext, newNavigationProps } from './navigation'
 import { RecoilRoot } from 'recoil'
 import { setServices } from './api'
@@ -20,11 +19,9 @@ const App = (props: Props) => {
   return (
     <div>
       <RecoilRoot>
-        <DatabaseContext.Provider value={{ database }}>
-          <NavigationContext.Provider value={newNavigationProps()}>
-            <DockFrame createPanel={createPanel}/>
-          </NavigationContext.Provider>
-        </DatabaseContext.Provider>
+        <NavigationContext.Provider value={newNavigationProps()}>
+          <DockFrame createPanel={createPanel}/>
+        </NavigationContext.Provider>
       </RecoilRoot>
     </div>
   )

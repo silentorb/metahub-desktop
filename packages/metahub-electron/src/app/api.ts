@@ -12,8 +12,10 @@ export function newApi(server: Server) {
   const root = server.config.database.path
 
   function handle0<T>(channel: string, handler: () => TaskEither<Error, T>): void {
-    ipcMain.handle(channel, async (): Promise<Either<Error, T>> =>
-      await handler()()
+    ipcMain.handle(channel, async (): Promise<Either<Error, T>> => {
+        const v = await handler()()
+        return v
+      }
     )
   }
 

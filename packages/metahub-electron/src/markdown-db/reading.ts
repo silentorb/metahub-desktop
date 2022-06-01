@@ -8,8 +8,6 @@ import * as TE from 'fp-ts/TaskEither'
 import { TaskEither } from 'fp-ts/TaskEither'
 import * as E from 'fp-ts/Either'
 import { getMarkdownTitleOrFilename, getOptionalMarkdownTitle, parseMarkdown } from 'metahub-markdown'
-import * as R from 'fp-ts/Record'
-import { Task } from 'fp-ts/Task'
 
 export const loadDocumentWithAST = (file: string): TaskEither<Error, DocumentContents> =>
   pipe(
@@ -40,58 +38,22 @@ export const loadDocument = (id: string, filePath: string): TaskEither<Error, Da
     )
   )
 
-export async function loadDocuments(files: string[]) {
-  const result: { [key: string]: DocumentContents } = {}
-  const errors = []
-  for (const file of files) {
-    const k = await pipe(
-      loadDocumentWithAST(file),
-      TE.match(
-        error => {
-          errors.push(error);
-          return undefined
-        },
-        document => result[file] = document
-      )
-    )()
-    const i = 0
-  }
-  return result
-}
-
-export function gatherFiles(root: string): TaskEither<Error, DataDocument[]> {
-  const files = getFilesRecursive(root)
-  // Eventually this can be refactored without the tryCatch
-  return TE.tryCatch(
-    async () => {
-      const documents = await loadDocuments(files)
-      return pipe(
-        files,
-        A.filterMap((file: string) =>
-          pipe(
-            getRecordInfoFromAbsolutePath(file, root),
-            O.chain(info => pipe(
-              documents,
-              R.lookup(file),
-              O.map(document => ({
-                ...info,
-                ...document,
-                title: getMarkdownTitleOrFilename(document.content, info)
-              }))
-            ))
-          )
+export function gatherFiles(root: string): TaskEither<Error, readonly DataDocument[]> {
+  return pipe(
+    getFilesRecursive(root),
+    A.filterMap(
+      getRecordInfoFromAbsolutePath(root)
+    ),
+    TE.traverseArray(info =>
+      pipe(
+        loadDocumentWithAST(info.storagePath),
+        TE.map(document => ({
+            ...info,
+            ...document,
+            title: getMarkdownTitleOrFilename(document.content, info)
+          })
         )
       )
-    },
-    reason => new Error(`${reason}`),
+    )
   )
 }
-
-// export async function scanSourceFiles(dirPath: string) {
-//   const files = gatherFiles(dirPath)
-//
-//   // for (const [key, filePath] of files) {
-//   //   // const templateName = article.data.template
-//   //   const contents = loadMarkDown(filePath)
-//   // }
-// }

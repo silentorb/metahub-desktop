@@ -20,7 +20,7 @@ export interface RecordInfo extends DocumentInfo {
 export type AsyncResponse<T> = TaskEither<Error, T>
 
 export interface DataReader<T> {
-  getAllRecords(): AsyncResponse<DocumentInfo[]>
+  getAllRecords(): AsyncResponse<readonly DocumentInfo[]>
 
   getRecordContent(id: string): AsyncResponse<T>
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { DockLayout, DropDirection, LayoutBase, TabBase, TabData } from 'rc-dock'
+import { BoxBase, DockLayout, DropDirection, LayoutBase, PanelBase, TabBase, TabData } from 'rc-dock'
 import 'rc-dock/dist/rc-dock.css'
 import { fallbackPanel } from './panel-utility'
 import { pipe } from 'fp-ts/function'
@@ -12,7 +12,6 @@ import * as Algorithm from 'rc-dock/lib/Algorithm'
 import { configWorkspaceLayout } from '../config'
 import { LayoutParent, TabContainer } from 'metahub-common'
 import { useRecoilState } from 'recoil'
-import { BoxBase, PanelBase } from 'rc-dock/src/DockData'
 
 interface Props {
   createPanel: CreatePanel

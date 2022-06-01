@@ -1,11 +1,10 @@
 import React from 'react'
-import { DataDocument, DocumentDatabase } from 'metahub-protocol'
+import { DataDocument, DocumentDatabase, DocumentInfo } from 'metahub-protocol'
 import { DatabaseStub } from './database-stub'
 import { contextWrapper } from '../utility'
-import { atomFamily, selectorFamily } from 'recoil'
-import * as E from 'fp-ts/Either'
+import { atom, atomFamily } from 'recoil'
 import { pipe } from 'fp-ts/function'
-import { getServices } from '../api'
+import { DataResource, getServices, loadDataResource, loadingState } from '../api'
 
 export interface DatabaseProps {
   database: DocumentDatabase
@@ -17,51 +16,28 @@ export const DatabaseContext = React.createContext<DatabaseProps>({
 
 export const withDatabase = contextWrapper(DatabaseContext)
 
-export enum DocumentStatus {
-  failed = 'failed',
-  loading = 'loading',
-  available = 'available',
-}
-
-export interface LoadingDocument {
-  status: DocumentStatus.loading
-}
-
-export interface FailedDocument {
-  status: DocumentStatus.failed
-  error: Error
-}
-
-export interface AvailableDocument {
-  status: DocumentStatus.available
-  document: DataDocument
-}
-
-export type WrappedDocument = LoadingDocument | AvailableDocument | FailedDocument
-
-export const documentsState = atomFamily<WrappedDocument, string>({
+export const documentsState = atom<DataResource<DocumentInfo[]>>({
   key: 'documents',
-  default: { status: DocumentStatus.loading },
-  effects: id => [
+  default: loadingState,
+  effects: [
     ({ setSelf }) => {
-      getServices().database.getRecordContent(id)
-        .then(result => {
-          const wrappedDocument = pipe(
-            result,
-            E.match<Error, DataDocument, WrappedDocument>(
-              error => ({ status: DocumentStatus.failed, error }),
-              document => ({ status: DocumentStatus.available, document })
-            )
-          )
-          setSelf(wrappedDocument)
-        })
+      pipe(
+        getServices().database.getAllRecords(),
+        loadDataResource(setSelf),
+      )()
     }
   ]
 })
 
-// export const documentsQuery = selectorFamily({
-//   key: 'documentsQuery',
-//   get: (id: string) => async () => {
-//     return staticDatabase.getRecordContent(id)
-//   },
-// })
+export const documentState = atomFamily<DataResource<DataDocument>, string>({
+  key: 'document',
+  default: loadingState,
+  effects: id => [
+    ({ setSelf }) => {
+      pipe(
+        getServices().database.getRecordContent(id),
+        loadDataResource(setSelf),
+      )()
+    }
+  ]
+})

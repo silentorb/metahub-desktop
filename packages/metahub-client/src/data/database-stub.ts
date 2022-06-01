@@ -4,33 +4,33 @@ import {
   DocumentDatabase,
   RecordInfo,
 } from 'metahub-protocol'
-import { left, right } from 'fp-ts/Either'
+import * as TE from 'fp-ts/TaskEither'
 
-const voidSuccessResponse = right(undefined)
+const voidSuccessResponse = TE.right(undefined)
 
 export class DatabaseStub implements DocumentDatabase {
-  async getRecordContent(): AsyncResponse<DataDocument> {
-    return left(new Error('No database implementation is yet initialized'))
+  getRecordContent(): AsyncResponse<DataDocument> {
+    return TE.left(new Error('No database implementation is yet initialized'))
   }
 
-  async writeRecord(path: string, content: DataDocument): AsyncResponse<void> {
+  writeRecord(path: string, content: DataDocument): AsyncResponse<void> {
     return voidSuccessResponse
   }
 
-  async copyRecord(previous: string, next: string): AsyncResponse<void> {
+  copyRecord(previous: string, next: string): AsyncResponse<void> {
     return voidSuccessResponse
   }
 
-  async deleteRecord(path: string): AsyncResponse<void> {
+  deleteRecord(path: string): AsyncResponse<void> {
     return voidSuccessResponse
   }
 
-  async getAllRecords(): AsyncResponse<RecordInfo[]> {
-    return right([])
+  getAllRecords(): AsyncResponse<RecordInfo[]> {
+    return TE.right([])
   }
 
-  async moveRecord(previous: string, next: string): AsyncResponse<void> {
-    return right(undefined)
+  moveRecord(previous: string, next: string): AsyncResponse<void> {
+    return TE.right(undefined)
   }
 
 }

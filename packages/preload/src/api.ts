@@ -14,7 +14,11 @@ const functions = () => [
 
 const formatFunctions = () =>
   functions().reduce<{ [key: string]: any }>((a, f) => {
-    a[f] = (...args: any[]) => ipcRenderer.invoke(f, ...args)
+    a[f] = (...args: any[]) => {
+      const result = ipcRenderer.invoke(f, ...args)
+      // Convert the response to a Task in order to match the original API signature (all the endpoints are Tasks)
+      return () => result
+    }
     return a
   }, {})
 

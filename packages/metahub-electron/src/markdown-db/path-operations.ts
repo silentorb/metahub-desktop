@@ -11,7 +11,7 @@ export function getFileNameWithoutExtension(file: string): string {
   return getFilePathWithoutExtension(path.basename(file))
 }
 
-export function getRecordInfoFromAbsolutePath(filePath: string, rootPath: string): Option<Omit<RecordInfo, 'title'>> {
+export const getRecordInfoFromAbsolutePath = (rootPath: string) => (filePath: string): Option<Omit<RecordInfo, 'title'>> => {
   const withoutExternal = path.relative(rootPath, filePath)
   const withoutExtension = getFilePathWithoutExtension(withoutExternal)
   const tokens = withoutExtension.split('/')
@@ -24,5 +24,5 @@ export function getRecordInfoFromAbsolutePath(filePath: string, rootPath: string
     : none
 }
 
-export const getRecordPathFromRelativePath = (filePath: string, rootPath: string) =>
-  getRecordInfoFromAbsolutePath(filePath, path.resolve(rootPath))
+// export const getRecordPathFromRelativePath = (filePath: string, rootPath: string) =>
+//   getRecordInfoFromAbsolutePath(filePath, path.resolve(rootPath))
