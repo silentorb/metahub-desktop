@@ -16,7 +16,7 @@ export const DatabaseContext = React.createContext<DatabaseProps>({
 
 export const withDatabase = contextWrapper(DatabaseContext)
 
-export const documentsState = atom<DataResource<DocumentInfo[]>>({
+export const documentsState = atom<DataResource<readonly DocumentInfo[]>>({
   key: 'documents',
   default: loadingState,
   effects: [
