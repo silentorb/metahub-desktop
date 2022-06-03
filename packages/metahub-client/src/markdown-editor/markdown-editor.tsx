@@ -1,9 +1,13 @@
 import React from 'react'
 import { documentState } from '../data'
-import Editor from 'rich-markdown-editor'
 import styled from 'styled-components'
 import { useLoading } from '../utility'
 import { right } from 'fp-ts/Either'
+import { Ctx, defaultValueCtx, Editor, rootCtx } from '@milkdown/core'
+import { nord } from '@milkdown/theme-nord'
+import { ReactEditor, useEditor } from '@milkdown/react'
+import { gfm } from '@milkdown/preset-gfm'
+import { DataDocument } from 'metahub-protocol'
 
 interface Props {
   id: string
@@ -14,8 +18,27 @@ const DocumentMargin = styled.div`
   font-family: 'Open Sans', sans-serif;
 `
 
+interface InternalEditorProps {
+  document: DataDocument
+}
+
+const InternalEditor = ({ document }: InternalEditorProps) => {
+  const editor = useEditor((root) =>
+    Editor.make()
+      .config(context => {
+        context.set(rootCtx, root)
+        context.set(defaultValueCtx, document.textContent)
+      })
+      .use(nord)
+      .use(gfm),
+  )
+
+  return <ReactEditor editor={editor}/>
+}
+
 export const MarkdownEditor = (props: Props) => {
   const { id } = props
+
   return useLoading(documentState(id), (document, setDocument) => {
 
     let timer = 0
@@ -40,13 +63,6 @@ export const MarkdownEditor = (props: Props) => {
       }, 1000) as any
     }
 
-    return (
-      <DocumentMargin>
-        <Editor
-          defaultValue={document.textContent}
-          onChange={onChange}
-        />
-      </DocumentMargin>
-    )
+    return <InternalEditor document={document}/>
   })
 }

@@ -8,11 +8,11 @@
   "dependencies": {
     "fp-ts": "^2.12.1",
     "metahub-protocol": "1.0.0",
-    "remark": "^13.0.0",
-    "remark-parse": "^9.0.0",
-    "remark-frontmatter": "^3.0.0",
-    "remark-gfm": "^1.0.0",
-    "unified": "^9.2.2"
+    "remark": "^14.0.2",
+    "remark-parse": "^10.0.1",
+    "remark-frontmatter": "^4.0.1",
+    "remark-gfm": "^3.0.1",
+    "unified": "^10.1.2"
   },
   "devDependencies": {
     "@types/node": "^17.0.35",

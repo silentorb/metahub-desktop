@@ -3,7 +3,7 @@ import { program } from 'commander'
 
 if (process.env.NODE_ENV !== 'production') {
   require('source-map-support').install()
-  require('electron-reloader')(module)
+  // require('electron-reloader')(module)
 }
 
 export function main() {

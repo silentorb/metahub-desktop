@@ -16,18 +16,15 @@
     "fp-ts": "^2.12.1",
     "metahub-common": "1.0.0",
     "metahub-markdown": "1.0.0",
-    "metahub-protocol": "1.0.0",
-    "remark": "^13.0.0",
-    "remark-parse": "^9.0.0",
-    "remark-frontmatter": "^3.0.0",
-    "remark-gfm": "^1.0.0",
-    "unified": "^9.2.2"
+    "metahub-protocol": "1.0.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.35",
     "electron-reloader": "^1.2.3",
     "source-map-support": "^0.5.21",
+    "ts-loader": "^9.3.0",
     "typescript": "^4.6.4",
-    "vite": "^2.9.9"
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.9.2"
   }
 }

@@ -23,7 +23,7 @@ export function newApp(sourcePath: string) {
       width: 800,
       height: 600,
       webPreferences: {
-        preload: path.resolve(__dirname, '../../..', 'dist/preload', 'preload.js')
+        preload: path.resolve(__dirname, '..', 'preload', 'preload.js')
       }
     })
 
