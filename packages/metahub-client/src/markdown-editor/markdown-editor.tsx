@@ -3,11 +3,12 @@ import { documentState } from '../data'
 import styled from 'styled-components'
 import { useLoading } from '../utility'
 import { right } from 'fp-ts/Either'
-import { Ctx, defaultValueCtx, Editor, rootCtx } from '@milkdown/core'
+import { defaultValueCtx, Editor, rootCtx } from '@milkdown/core'
 import { nord } from '@milkdown/theme-nord'
 import { ReactEditor, useEditor } from '@milkdown/react'
 import { gfm } from '@milkdown/preset-gfm'
 import { DataDocument } from 'metahub-protocol'
+import { listener, listenerCtx } from '@milkdown/plugin-listener'
 
 interface Props {
   id: string
@@ -28,9 +29,15 @@ const InternalEditor = ({ document }: InternalEditorProps) => {
       .config(context => {
         context.set(rootCtx, root)
         context.set(defaultValueCtx, document.textContent)
+        context.get(listenerCtx)
+          .markdownUpdated((ctx, markdown, prevMarkdown) => {
+            console.log('markdown', markdown)
+            // output = markdown
+          })
       })
       .use(nord)
-      .use(gfm),
+      .use(gfm)
+      .use(listener)
   )
 
   return <ReactEditor editor={editor}/>

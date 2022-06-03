@@ -20,10 +20,10 @@ export function newApi(server: Server) {
   }
 
   function handle1<A, T>(channel: string, handler: (a: A) => TaskEither<Error, T>): void {
-    ipcMain.handle(channel, async (e, a): Promise<Either<Error, T>> =>
-    {  const r = await handler(a)()
-    return r
-    }
+    ipcMain.handle(channel, async (e, a): Promise<Either<Error, T>> => {
+        const r = await handler(a)()
+        return r
+      }
     )
   }
 

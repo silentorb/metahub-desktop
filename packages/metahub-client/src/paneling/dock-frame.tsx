@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BoxBase, DockLayout, DropDirection, LayoutBase, PanelBase, TabBase, TabData } from 'rc-dock'
 import 'rc-dock/dist/rc-dock.css'
 import { fallbackPanel } from './panel-utility'
@@ -12,6 +12,9 @@ import * as Algorithm from 'rc-dock/lib/Algorithm'
 import { configWorkspaceLayout } from '../config'
 import { LayoutParent, TabContainer } from 'metahub-common'
 import { useRecoilState } from 'recoil'
+import { BoxData, LayoutData } from 'rc-dock/src/DockData'
+import * as E from 'fp-ts/Either'
+import { ifDataResourceIsReady } from '../api'
 
 interface Props {
   createPanel: CreatePanel
@@ -87,25 +90,54 @@ export function simplifyLayoutParent(box: BoxBase): LayoutParent {
   return { id, mode, size, children }
 }
 
+export const applyLayoutChanges = (createPanel: CreatePanel) => (latest: BoxData, layout: LayoutData): LayoutData => {
+  let result = layout
+  for (const child of latest.children) {
+    if ('tabs' in child && child.id) {
+      const mirror = Algorithm.find(layout, child.id)
+      if (mirror && 'tabs' in mirror) {
+        for (const tab of child.tabs) {
+          if (tab.id && !mirror.tabs.some(t => t.id === tab.id)) {
+            const newTab =  createPanelTab(createPanel, { id: tab.id })
+            result = Algorithm.addTabToPanel(result, newTab, mirror)
+          }
+        }
+      }
+    }
+  }
+
+  return result
+}
+
 export const DockFrame = (props: Props) => {
   const { createPanel } = props
-  const [internalLayout, setInternalLayout] = useState<LayoutBase>(wrappedDefaultLayout)
   const [layout, setLayout] = useRecoilState(configWorkspaceLayout)
+  const [internalLayout, setInternalLayout] = useState<LayoutBase>(wrappedDefaultLayout)
 
   const loadTab = (tab: TabBase | TabData): TabData =>
     'content' in tab
       ? tab
       : createPanelTab(createPanel, tab.id ? tab as any : { id: noneLocation })
 
+  useEffect(() => {
+    console.log('layout', layout)
+    console.log('internalLayout', internalLayout)
+    ifDataResourceIsReady(layout, rawLayout => {
+      const nextLayout = applyLayoutChanges(createPanel)(rawLayout as BoxData, internalLayout as LayoutData)
+      if (nextLayout != internalLayout) {
+        setInternalLayout(nextLayout)
+      }
+    })
+  }, [layout])
+
   useEventListener(navigationEvent, navigation => {
-    // if (location.type === 'document') {
     const tab = loadTab(navigation)
-    const panel = internalLayout.dockbox.children[1]
-    const nextInternalLayout = Algorithm.addTabToPanel(internalLayout as any, tab, panel as any)
+    const original = internalLayout as LayoutData
+    const panel = Algorithm.find(original, defaultPanels.editor)
+    const nextInternalLayout = Algorithm.addTabToPanel(original, tab, panel as any)
     setInternalLayout(nextInternalLayout)
     const nextLayout = simplifyLayoutParent(nextInternalLayout.dockbox)
-    setLayout(some(nextLayout))
-    // }
+    setLayout(some(nextLayout) as any)
   })
 
   const onLayoutChange = (newLayout: LayoutBase, currentTabId?: string, direction?: DropDirection) => {
@@ -114,8 +146,8 @@ export const DockFrame = (props: Props) => {
       alert('removal of this tab is rejected')
     } else {
       setInternalLayout(newLayout)
-      const simpleNewLayout = O.getOrElse(() => defaultLayout)(layout)
-      setLayout(some(simpleNewLayout))
+      const simpleNewLayout = O.getOrElse(() => defaultLayout)(layout as any)
+      setLayout(some(simpleNewLayout) as any)
     }
   }
 

@@ -4,7 +4,7 @@ import { DatabaseStub } from './database-stub'
 import { contextWrapper } from '../utility'
 import { atom, atomFamily } from 'recoil'
 import { pipe } from 'fp-ts/function'
-import { DataResource, getServices, loadDataResource, loadingState } from '../api'
+import { DataResource, getServices, setDataResource, loadingState } from '../api'
 
 export interface DatabaseProps {
   database: DocumentDatabase
@@ -23,7 +23,7 @@ export const documentsState = atom<DataResource<readonly DocumentInfo[]>>({
     ({ setSelf }) => {
       pipe(
         getServices().database.getAllRecords(),
-        loadDataResource(setSelf),
+        setDataResource(setSelf),
       )()
     }
   ]
@@ -36,7 +36,7 @@ export const documentState = atomFamily<DataResource<DataDocument>, string>({
     ({ setSelf }) => {
       pipe(
         getServices().database.getRecordContent(id),
-        loadDataResource(setSelf),
+        setDataResource(setSelf),
       )()
     }
   ]

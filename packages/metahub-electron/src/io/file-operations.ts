@@ -1,12 +1,14 @@
 import * as fs from 'fs'
 import { flatten } from '../markdown-db/utility'
 import * as path from 'path'
+import * as E from 'fp-ts/Either'
 import * as TE from 'fp-ts/TaskEither'
 import * as O from 'fp-ts/Option'
 import { TaskEither } from 'fp-ts/TaskEither'
 import { pipe } from 'fp-ts/function'
 import { validateObject } from 'metahub-common'
 import { Option } from 'fp-ts/Option'
+import { Either } from 'fp-ts/Either'
 
 export function getFilesRecursive(fileOrDirectory: string): string[] {
   if (fileOrDirectory == '.' || fileOrDirectory == '..')
@@ -36,10 +38,16 @@ export function readFile(filePath: string): TaskEither<Error, string> {
   )
 }
 
+export const parseJson = (jsonString: string): Either<Error, any> =>
+  E.tryCatch(
+    () => JSON.parse(jsonString),
+    reason => new Error(`${reason}`)
+  )
+
 export function readJsonFile(filePath: string): TaskEither<Error, any> {
   return pipe(
     readFile(filePath),
-    TE.chainEitherK(JSON.parse)
+    TE.chainEitherK(parseJson),
   )
 }
 

@@ -496,6 +496,14 @@
   dependencies:
     tslib "^2.3.1"
 
+"@milkdown/plugin-listener@^6.1.3":
+  version "6.1.3"
+  resolved "https://registry.yarnpkg.com/@milkdown/plugin-listener/-/plugin-listener-6.1.3.tgz#30776b92792f919265ed42a415b18377f05ec5fb"
+  integrity sha512-825KrjFk8uEU9rPx4zswdDkDlHj1pb9+fJSfo7JsyHj4FLmiuxFJIO0XSCZ8jnvZ7lRByChOpqPZ0Wo0gKkPbA==
+  dependencies:
+    "@milkdown/utils" "6.1.3"
+    tslib "^2.3.1"
+
 "@milkdown/preset-commonmark@^6.1.3":
   version "6.1.3"
   resolved "https://registry.yarnpkg.com/@milkdown/preset-commonmark/-/preset-commonmark-6.1.3.tgz#2f89a0ee5666e3035474a279f51beef3aef93375"
@@ -799,7 +807,7 @@
   dependencies:
     "@types/react" "^17"
 
-"@types/react@*", "@types/react@17.0.17", "@types/react@^17":
+"@types/react@*", "@types/react@^17":
   version "17.0.17"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.17.tgz#1772d3d5425128e0635a716f49ef57c2955df055"
   integrity sha512-nrfi7I13cAmrd0wje8czYpf5SFbryczCtPzFc6ijqvdjKcyA3tCvGxwchOUlxb2ucBPuJ9Y3oUqKrRqZvrz0lw==

@@ -2,6 +2,7 @@ import { Either, left, right } from 'fp-ts/Either'
 import { DefaultValue, WrappedValue } from 'recoil'
 import * as TE from 'fp-ts/TaskEither'
 import { AppServices } from '../types'
+import * as E from 'fp-ts/Either'
 
 let services: AppServices
 
@@ -24,7 +25,7 @@ export type SetSelf<T> =
      | ((param: T | DefaultValue) => T | DefaultValue | WrappedValue<T>),
   ) => void
 
-export const loadDataResource = <T>(setSelf: SetSelf<DataResource<T>>) =>
+export const setDataResource = <T>(setSelf: SetSelf<DataResource<T>>) =>
   TE.match<Error, DataResource<T>, T>(
     error => {
       const value = left(error)
@@ -37,3 +38,10 @@ export const loadDataResource = <T>(setSelf: SetSelf<DataResource<T>>) =>
       return value
     }
   )
+
+export const ifDataResourceIsReady = <T>(resource: DataResource<T>, action: (value: T) => void) => {
+  if (resource !== loadingState) {
+    E.match(() => {
+    }, action)(resource)
+  }
+}
