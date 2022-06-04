@@ -1,11 +1,6 @@
-import { TabData } from 'rc-dock'
 import React from 'react'
+import { TabContentFactory } from './types'
 
 export const commonPanel = { closable: true }
 
-export const fallbackPanel = (id?: string): TabData => ({
-  ...commonPanel,
-  id,
-  title: 'Unnamed',
-  content: <div/>
-})
+export const fallbackPanel: TabContentFactory = node => undefined //(<div>Empty</div>)

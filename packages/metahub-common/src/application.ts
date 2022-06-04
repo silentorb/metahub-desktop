@@ -1,9 +1,8 @@
 import { TaskEither } from 'fp-ts/TaskEither'
-import { LayoutParent } from './workspace'
 
 export type ConfigKeyType<T> = <T>() => string
 
-export const workspaceLayout: ConfigKeyType<LayoutParent> = () =>
+export const workspaceLayout: ConfigKeyType<any> = () =>
   'workspace/layout'
 
 export interface Application {

@@ -1,10 +1,11 @@
-import { Option } from 'fp-ts/Option'
-import { TabData } from 'rc-dock'
-import { NavigationEvent, UiLocation } from '../navigation'
+import { TabNode } from 'flexlayout-react'
+import React from 'react'
 
 export const DefaultPanels = {
   structure: '~views/structure',
   workspace: '~views/workspace',
 }
 
-export type CreatePanel = (navigation: NavigationEvent) => Option<TabData>
+export type TabContentFactory = (node: TabNode) => React.ReactNode
+
+export type TabContentFactoryMap = { [key: string]: TabContentFactory }

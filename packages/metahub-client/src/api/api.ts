@@ -39,7 +39,7 @@ export const setDataResource = <T>(setSelf: SetSelf<DataResource<T>>) =>
     }
   )
 
-export const ifDataResourceIsReady = <T>(resource: DataResource<T>, action: (value: T) => void) => {
+export const ifDataResourceIsReady = <T>(action: (value: T) => void) => (resource: DataResource<T>) => {
   if (resource !== loadingState) {
     E.match(() => {
     }, action)(resource)

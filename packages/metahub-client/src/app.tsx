@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { builtinPanelCreators, DockFrame, routePanelCreation } from './paneling'
+import { DockFrame, tabComponentMap } from './paneling'
 import './styles.css'
 import { AppServices } from './types'
 import { NavigationContext, newNavigationProps } from './navigation'
@@ -14,13 +14,12 @@ interface Props {
 const App = (props: Props) => {
   const { application, database } = props.services
   setServices(props.services)
-  const createPanel = routePanelCreation(builtinPanelCreators())
 
   return (
     <div>
       <RecoilRoot>
         <NavigationContext.Provider value={newNavigationProps()}>
-          <DockFrame createPanel={createPanel}/>
+          <DockFrame components={tabComponentMap}/>
         </NavigationContext.Provider>
       </RecoilRoot>
     </div>

@@ -10,6 +10,8 @@ import { gfm } from '@milkdown/preset-gfm'
 import { DataDocument } from 'metahub-protocol'
 import { listener, listenerCtx } from '@milkdown/plugin-listener'
 
+export const markdownEditorKey = 'markdownEditor'
+
 interface Props {
   id: string
 }
