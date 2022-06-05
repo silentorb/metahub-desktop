@@ -1,4 +1,4 @@
-import { RecordInfo } from 'metahub-protocol'
+import { DocumentInfo } from 'metahub-protocol'
 import { Option } from 'fp-ts/Option'
 import { pipe } from 'fp-ts/function'
 import { unified } from 'unified'
@@ -31,10 +31,18 @@ export function getOptionalMarkdownTitle(content: Parent): Option<string> {
   )
 }
 
-export function getMarkdownTitleOrFilename(content: Parent, info: Omit<RecordInfo, 'title'>): string {
+function getBaseName(value: string): string {
+  const base = value.substring(value.lastIndexOf('/') + 1)
+  const dotIndex = base.lastIndexOf('.')
+  return dotIndex != -1
+    ? base.substring(0, dotIndex)
+    : base
+}
+
+export function getMarkdownTitleOrFilename(content: Parent, info: Omit<DocumentInfo, 'title'>): string {
   return pipe(
     getOptionalMarkdownTitle(content),
-    O.getOrElse(() => info.path[info.path.length - 1])
+    O.getOrElse(() => getBaseName(info.id))
   )
 }
 

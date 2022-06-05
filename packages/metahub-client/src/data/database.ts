@@ -4,7 +4,8 @@ import { DatabaseStub } from './database-stub'
 import { contextWrapper } from '../utility'
 import { atom, atomFamily } from 'recoil'
 import { pipe } from 'fp-ts/function'
-import { DataResource, getServices, setDataResource, loadingState } from '../api'
+import { DataResource, getServices, setDataResource, loadingState, ifDataResourceIsReady } from '../api'
+import * as TE from 'fp-ts/TaskEither'
 
 export interface DatabaseProps {
   database: DocumentDatabase
@@ -33,11 +34,20 @@ export const documentState = atomFamily<DataResource<DataDocument>, string>({
   key: 'document',
   default: loadingState,
   effects: id => [
-    ({ setSelf }) => {
+    ({ setSelf, onSet }) => {
       pipe(
         getServices().database.getRecordContent(id),
         setDataResource(setSelf),
       )()
+
+      onSet(
+        ifDataResourceIsReady(value =>
+          pipe(
+            getServices().database.writeRecord(id, value),
+            TE.mapLeft(error => console.error(`Could not save document ${id} (${error.message})`))
+          )()
+        )
+      )
     }
   ]
 })

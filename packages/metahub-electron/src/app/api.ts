@@ -35,6 +35,7 @@ export function newApi(server: Server) {
 
   handle0('getAllRecords', database.getAllRecords.bind(database))
   handle1('getRecordContent', database.getRecordContent.bind(database))
+  handle2('writeRecord', (path: string) => (content: string) => database.writeRecord(path, content))
 
   const getConfigPathByKey = getConfigFilePath(root)
 

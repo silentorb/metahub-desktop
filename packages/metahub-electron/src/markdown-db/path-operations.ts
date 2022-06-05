@@ -1,6 +1,7 @@
 import * as path from 'path'
-import { NonEmptyStringArray, RecordInfo } from 'metahub-protocol'
+import { NonEmptyStringArray } from 'metahub-protocol'
 import { none, Option, some } from 'fp-ts/Option'
+import { RecordInfo } from './types'
 
 export function getFilePathWithoutExtension(file: string): string {
   const match = file.match(/^(.*)\.[^.]+$/)

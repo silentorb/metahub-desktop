@@ -8,6 +8,7 @@ import * as TE from 'fp-ts/TaskEither'
 import { TaskEither } from 'fp-ts/TaskEither'
 import * as E from 'fp-ts/Either'
 import { getMarkdownTitleOrFilename, getOptionalMarkdownTitle, parseMarkdown } from 'metahub-markdown'
+import { RecordDocument } from './types'
 
 export const loadDocumentWithAST = (file: string): TaskEither<Error, DocumentContents> =>
   pipe(
@@ -38,7 +39,7 @@ export const loadDocument = (id: string, filePath: string): TaskEither<Error, Da
     )
   )
 
-export function gatherFiles(root: string): TaskEither<Error, readonly DataDocument[]> {
+export function gatherFiles(root: string): TaskEither<Error, readonly RecordDocument[]> {
   return pipe(
     getFilesRecursive(root),
     A.filterMap(

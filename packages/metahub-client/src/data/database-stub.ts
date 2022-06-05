@@ -1,9 +1,4 @@
-import {
-  AsyncResponse,
-  DataDocument,
-  DocumentDatabase,
-  RecordInfo,
-} from 'metahub-protocol'
+import { AsyncResponse, DataDocument, DocumentDatabase, DocumentInfo, } from 'metahub-protocol'
 import * as TE from 'fp-ts/TaskEither'
 
 const voidSuccessResponse = TE.right(undefined)
@@ -25,7 +20,7 @@ export class DatabaseStub implements DocumentDatabase {
     return voidSuccessResponse
   }
 
-  getAllRecords(): AsyncResponse<RecordInfo[]> {
+  getAllRecords(): AsyncResponse<DocumentInfo[]> {
     return TE.right([])
   }
 

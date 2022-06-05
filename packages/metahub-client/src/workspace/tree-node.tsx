@@ -4,13 +4,13 @@ import { ChevronDown, ChevronRight, FileText, Folder } from 'react-feather';
 import { NodeHandlers } from 'react-arborist';
 import { NodeRendererProps } from 'react-arborist/dist/types'
 import { NavigationProps, withNavigation } from '../navigation'
-import { RecordInfo } from 'metahub-protocol'
+import { DocumentInfo } from 'metahub-protocol'
 import { TreeRow, TreeRowButton, TreeRowContents, TreeRowIcon, TreeRowInput, TreeRowSpacer } from './styles';
 
 const size = 16
 const color = '#999'
 
-export type TreeNodeData = RecordInfo & { children: TreeNodeData[] }
+export type TreeNodeData = DocumentInfo & { children: TreeNodeData[] }
 
 function MaybeToggleButton({ toggle, isOpen, isFolder, isSelected }: any) {
   if (isFolder) {

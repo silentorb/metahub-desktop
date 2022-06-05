@@ -1,7 +1,7 @@
 import React from 'react'
 import { documentState } from '../data'
 import styled from 'styled-components'
-import { useLoading } from '../utility'
+import { DataResourceSetter, useLoading } from '../utility'
 import { right } from 'fp-ts/Either'
 import { defaultValueCtx, Editor, rootCtx } from '@milkdown/core'
 import { nord } from '@milkdown/theme-nord'
@@ -23,9 +23,33 @@ const DocumentMargin = styled.div`
 
 interface InternalEditorProps {
   document: DataDocument
+  setDocument: DataResourceSetter<DataDocument>
 }
 
-const InternalEditor = ({ document }: InternalEditorProps) => {
+const InternalEditor = (props: InternalEditorProps) => {
+  const { document, setDocument } = props
+
+  let timer = 0
+  console.log('Rendering editor')
+  const onChange = (value: string) => {
+    console.log('changed', '@', document.textContent, '@', value, '@')
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      timer = 0
+      console.log('Timer finished')
+      if (value !== document.textContent) {
+        const newDocument = {
+          ...document,
+          textContent: value,
+        }
+        console.log('Updated document')
+        setDocument(right(newDocument))
+      }
+    }, 1000) as any
+  }
+
   const editor = useEditor((root) =>
     Editor.make()
       .config(context => {
@@ -35,6 +59,7 @@ const InternalEditor = ({ document }: InternalEditorProps) => {
           .markdownUpdated((ctx, markdown, prevMarkdown) => {
             console.log('markdown', markdown)
             // output = markdown
+            onChange(markdown)
           })
       })
       .use(nord)
@@ -47,31 +72,7 @@ const InternalEditor = ({ document }: InternalEditorProps) => {
 
 export const MarkdownEditor = (props: Props) => {
   const { id } = props
-
-  return useLoading(documentState(id), (document, setDocument) => {
-
-    let timer = 0
-    console.log('Rendering editor')
-    const onChange: (value: () => string) => void = getValue => {
-      console.log('changed', '@', document.textContent, '@', getValue(), '@')
-      if (timer) {
-        clearTimeout(timer)
-      }
-      timer = setTimeout(() => {
-        timer = 0
-        console.log('Timer finished')
-        const textContent = getValue()
-        if (textContent !== document.textContent) {
-          const newDocument = {
-            ...document,
-            textContent,
-          }
-          console.log('Updated document')
-          setDocument(right(newDocument))
-        }
-      }, 1000) as any
-    }
-
-    return <InternalEditor document={document}/>
-  })
+  return useLoading(documentState(id), (document, setDocument) =>
+    <InternalEditor document={document} setDocument={setDocument}/>
+  )
 }

@@ -1,3 +1,4 @@
+export * from './default-layout'
 export * from './dock-frame'
 export * from './panel-creation'
 export * from './panel-utility'

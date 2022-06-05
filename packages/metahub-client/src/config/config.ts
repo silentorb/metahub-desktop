@@ -1,4 +1,4 @@
-import { atom, Loadable, RecoilValue, WrappedValue } from 'recoil'
+import { atom, Loadable, RecoilState, RecoilValue, WrappedValue } from 'recoil'
 import { pipe } from 'fp-ts/function'
 import { ConfigKeyType, workspaceLayout } from 'metahub-common'
 import { DataResource, getServices, ifDataResourceIsReady, loadingState, setDataResource } from '../api'
@@ -6,10 +6,12 @@ import * as TE from 'fp-ts/TaskEither'
 
 export type AtomDefaultValue<T> = RecoilValue<T> | Promise<T> | Loadable<T> | WrappedValue<T> | T
 
-export const configState = <T>(key: ConfigKeyType<T>, defaultValue: AtomDefaultValue<DataResource<T>> = loadingState) =>
+export type KeyedRecoilState<T, K extends string> = RecoilState<T>
+
+export const configState = <T, K extends string>(key: ConfigKeyType<T, K>) =>
   atom<DataResource<T>>({
     key: `config/${key}`,
-    default: defaultValue,
+    default: loadingState,
     effects: [
       ({ setSelf }) => {
         pipe(

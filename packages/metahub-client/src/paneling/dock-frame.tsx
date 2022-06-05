@@ -1,88 +1,34 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { TabContentFactoryMap } from './types'
 import { navigationEvent } from '../navigation'
 import { useEventListener } from 'happening-react'
 import { configWorkspaceLayout } from '../config'
-import { useRecoilState } from 'recoil'
-import { ifDataResourceIsReady } from '../api'
-import { Actions, DockLocation, Layout, Model } from 'flexlayout-react'
-import { TabNode } from 'flexlayout-react/declarations/model/TabNode'
-import { IJsonModel } from 'flexlayout-react/src/model/IJsonModel'
+import { Actions, DockLocation, Layout, Model, TabNode } from 'flexlayout-react'
 import 'flexlayout-react/style/light.css'
 import { getTabContentFactory } from './panel-creation'
 import { right } from 'fp-ts/Either'
-import { markdownEditorKey } from '../markdown-editor/markdown-editor'
+import { markdownEditorKey } from '../markdown-editor'
+import { DataResourceSetter, withOptionalLoading } from '../utility'
+import { defaultLayout, defaultPanels } from './default-layout'
+import * as O from 'fp-ts/Option'
 
 interface Props {
   components: TabContentFactoryMap
+  layout: any
+  setLayout: DataResourceSetter<any>
 }
 
-const defaultPanels = {
-  root: '~panels/root',
-  editor: '~panels/editor',
-  left: '~panels/left',
-  right: '~panels/right',
-}
+export const DockFrame = withOptionalLoading(configWorkspaceLayout, 'layout', (props: Props) => {
+  const { components, layout, setLayout } = props
+  const initialLayout = O.getOrElse(() => defaultLayout)(layout)
+  const [model, setModel] = useState(Model.fromJson(initialLayout))
 
-const defaultLayout: IJsonModel = {
-  global: {
-    tabSetEnableDeleteWhenEmpty: false,
-  },
-  borders: [],
-  layout: {
-    type: 'row',
-    id: defaultPanels.root,
-    weight: 100,
-    children: [
-      {
-        type: 'tabset',
-        id: defaultPanels.left,
-        weight: 25,
-        children: [
-          {
-            type: 'tab',
-            id: '~panels/workspace',
-            name: 'Workspace',
-            component: 'workspace',
-            enableClose: false,
-          }
-        ]
-      },
-      {
-        type: 'tabset',
-        id: defaultPanels.editor,
-        weight: 50,
-        children: []
-      },
-      {
-        type: 'tabset',
-        id: defaultPanels.right,
-        weight: 25,
-        children: [
-          {
-            type: 'tab',
-            id: '~panels/structure',
-            name: 'Structure',
-            component: 'structure',
-            enableClose: false,
-          }
-        ]
-      }
-    ]
-  }
-}
-
-export const DockFrame = (props: Props) => {
-  const { components } = props
-  const [layout, setLayout] = useRecoilState(configWorkspaceLayout)
-  const [model, setModel] = useState(Model.fromJson(defaultLayout))
-
-  useEffect(() => {
-    console.log('layout', layout)
-    ifDataResourceIsReady<IJsonModel>(rawLayout => {
-      setModel(Model.fromJson(rawLayout))
-    })(layout)
-  }, [layout])
+  // useEffect(() => {
+  //   console.log('layout', layout)
+  //   ifDataResourceIsReady<IJsonModel>(rawLayout => {
+  //     setModel(Model.fromJson(rawLayout))
+  //   })(layout)
+  // }, [layout])
 
   useEventListener(navigationEvent, navigation => {
     const tabInfo = {
@@ -102,9 +48,8 @@ export const DockFrame = (props: Props) => {
     const createTab = getTabContentFactory(components)(node)
     return createTab(node)
   }
-  return (
-    <Layout model={model} factory={factory} onModelChange={onChange}>
 
-    </Layout>
+  return (
+    <Layout model={model} factory={factory} onModelChange={onChange}/>
   )
-}
+})

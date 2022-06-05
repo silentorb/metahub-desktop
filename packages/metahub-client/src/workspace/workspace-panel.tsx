@@ -1,21 +1,22 @@
 import React from 'react'
 import { Tree } from 'react-arborist'
 import { TreeNode } from './tree-node'
-import { DatabaseProps, documentsState, withDatabase } from '../data'
-import { useLoading } from '../utility'
+import { DocumentInfo } from 'metahub-protocol'
+import { documentsState } from '../data'
+import { withRequiredLoading } from '../utility'
+import { DataResource } from '../api'
 
-interface Props extends DatabaseProps {
-
+interface Props {
+  documents: DataResource<readonly DocumentInfo[]>
 }
 
-export const WorkspacePanel = withDatabase((props: Props) => {
-  return useLoading(documentsState, documents => {
-    const data = {
-      id: '.',
-      name: 'Root',
-      children: documents,
-    } as any
+export const WorkspacePanel = withRequiredLoading(documentsState, 'documents', (props: Props) => {
+  const { documents } = props
+  const data = {
+    id: '.',
+    name: 'Root',
+    children: documents,
+  } as any
 
-    return <Tree data={data}>{TreeNode}</Tree>
-  })
+  return <Tree data={data}>{TreeNode}</Tree>
 })

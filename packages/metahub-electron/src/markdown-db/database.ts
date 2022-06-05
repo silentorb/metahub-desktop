@@ -33,7 +33,16 @@ export class MarkdownDatabase implements DataSource<DataDocument> {
   }
 
   getAllRecords(): AsyncResponse<readonly DocumentInfo[]> {
-    return gatherFiles(this.config.path)
+    const cache = this.cache
+    return pipe(
+      gatherFiles(this.config.path),
+      TE.map(files => {
+        for (const file of files) {
+          cache.index[file.id] = file
+        }
+        return files
+      })
+    )
   }
 
   getRecordContent(id: string): AsyncResponse<DataDocument> {
