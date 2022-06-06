@@ -9,6 +9,8 @@ import { ReactEditor, useEditor } from '@milkdown/react'
 import { gfm } from '@milkdown/preset-gfm'
 import { DataDocument } from 'metahub-protocol'
 import { listener, listenerCtx } from '@milkdown/plugin-listener'
+import { linkPlugin } from './link-plugin'
+import { NavigationProps, withNavigation } from '../navigation'
 
 export const markdownEditorKey = 'markdownEditor'
 
@@ -21,13 +23,13 @@ const DocumentMargin = styled.div`
   font-family: 'Open Sans', sans-serif;
 `
 
-interface InternalEditorProps {
+interface InternalEditorProps extends NavigationProps {
   document: DataDocument
   setDocument: DataResourceSetter<DataDocument>
 }
 
-const InternalEditor = (props: InternalEditorProps) => {
-  const { document, setDocument } = props
+const InternalEditor = withNavigation((props: InternalEditorProps) => {
+  const { document, setDocument, navigateTo } = props
 
   let timer = 0
   console.log('Rendering editor')
@@ -65,10 +67,11 @@ const InternalEditor = (props: InternalEditorProps) => {
       .use(nord)
       .use(gfm)
       .use(listener)
+      .use(linkPlugin({ navigateTo }))
   )
 
   return <ReactEditor editor={editor}/>
-}
+})
 
 export const MarkdownEditor = (props: Props) => {
   const { id } = props

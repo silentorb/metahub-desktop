@@ -8,6 +8,7 @@ export type NonEmptyStringArray = NonEmptyArray<string>
 export interface DocumentInfo {
   id: string
   title: string
+  path: NonEmptyStringArray
 }
 
 export type AsyncResponse<T> = TaskEither<Error, T>

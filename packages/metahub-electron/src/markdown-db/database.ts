@@ -46,7 +46,7 @@ export class MarkdownDatabase implements DataSource<DataDocument> {
   }
 
   getRecordContent(id: string): AsyncResponse<DataDocument> {
-    return loadDocument(id, this.getDocumentPath(id))
+    return loadDocument(this.root)(this.getDocumentPath(id))
   }
 
   moveRecord(previous: RecordPath, next: RecordPath): AsyncResponse<void> {

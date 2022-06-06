@@ -37,7 +37,8 @@ export function clearEventListener() {
 export function invokeEvent<T>(type: TypedEventType<T>, e: T) {
   const map = listeners.get(type())
   if (map) {
-    for (const listener of map.values()) {
+    const values = map.values()
+    for (const listener of values) {
       listener(e)
     }
   }

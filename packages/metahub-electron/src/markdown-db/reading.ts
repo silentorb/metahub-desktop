@@ -1,14 +1,14 @@
 import { getFilesRecursive, readFile } from '../io'
 import { getRecordInfoFromAbsolutePath } from './path-operations'
-import { DataDocument, DocumentContents } from 'metahub-protocol'
-import * as A from 'fp-ts/Array'
+import { DocumentContents } from 'metahub-protocol'
 import * as O from 'fp-ts/Option'
 import { pipe } from 'fp-ts/function'
 import * as TE from 'fp-ts/TaskEither'
 import { TaskEither } from 'fp-ts/TaskEither'
 import * as E from 'fp-ts/Either'
-import { getMarkdownTitleOrFilename, getOptionalMarkdownTitle, parseMarkdown } from 'metahub-markdown'
+import { getOptionalMarkdownTitle, parseMarkdown } from 'metahub-markdown'
 import { RecordDocument } from './types'
+import { Parent } from 'unist'
 
 export const loadDocumentWithAST = (file: string): TaskEither<Error, DocumentContents> =>
   pipe(
@@ -22,39 +22,34 @@ export const loadDocumentWithAST = (file: string): TaskEither<Error, DocumentCon
     )
   )
 
-export const loadDocument = (id: string, filePath: string): TaskEither<Error, DataDocument> =>
+export const getTitle = (id: string, content: Parent) =>
+  pipe(
+    getOptionalMarkdownTitle(content),
+    O.getOrElse(() => id.substring(id.lastIndexOf('/') + 1)),
+  )
+
+export const loadDocument = (rootPath: string) => (filePath: string): TaskEither<Error, RecordDocument> =>
   pipe(
     loadDocumentWithAST(filePath),
-    TE.map(({ textContent, content }) =>
+    TE.chainEitherK(({ textContent, content }) =>
       pipe(
-        getOptionalMarkdownTitle(content),
-        O.getOrElse(() => id.substring(id.lastIndexOf('/') + 1)),
-        title => ({
-          id,
-          title,
-          content,
-          textContent,
-        })
+        getRecordInfoFromAbsolutePath(rootPath)(filePath),
+        E.map(info => ({
+            ...info,
+            title: getTitle(info.id, content),
+            content,
+            textContent,
+          })
+        )
       )
     )
   )
 
-export function gatherFiles(root: string): TaskEither<Error, readonly RecordDocument[]> {
+export function gatherFiles(rootPath: string): TaskEither<Error, readonly RecordDocument[]> {
   return pipe(
-    getFilesRecursive(root),
-    A.filterMap(
-      getRecordInfoFromAbsolutePath(root)
-    ),
-    TE.traverseArray(info =>
-      pipe(
-        loadDocumentWithAST(info.storagePath),
-        TE.map(document => ({
-            ...info,
-            ...document,
-            title: getMarkdownTitleOrFilename(document.content, info)
-          })
-        )
-      )
+    getFilesRecursive(rootPath),
+    TE.traverseArray(
+      loadDocument(rootPath)
     )
   )
 }

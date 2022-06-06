@@ -31,18 +31,10 @@ export function getOptionalMarkdownTitle(content: Parent): Option<string> {
   )
 }
 
-function getBaseName(value: string): string {
-  const base = value.substring(value.lastIndexOf('/') + 1)
-  const dotIndex = base.lastIndexOf('.')
-  return dotIndex != -1
-    ? base.substring(0, dotIndex)
-    : base
-}
-
 export function getMarkdownTitleOrFilename(content: Parent, info: Omit<DocumentInfo, 'title'>): string {
   return pipe(
     getOptionalMarkdownTitle(content),
-    O.getOrElse(() => getBaseName(info.id))
+    O.getOrElse(() => info.path[info.path.length - 1])
   )
 }
 

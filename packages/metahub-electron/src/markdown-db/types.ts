@@ -1,7 +1,6 @@
-import { RecordPath, DocumentInfo, NonEmptyStringArray, DataDocument } from 'metahub-protocol'
+import { DataDocument, DocumentInfo, RecordPath } from 'metahub-protocol'
 
 export interface RecordInfo extends DocumentInfo {
-  path: NonEmptyStringArray
   storagePath: string
 }
 

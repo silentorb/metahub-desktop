@@ -32,7 +32,7 @@ export const DockFrame = withOptionalLoading(configWorkspaceLayout, 'layout', (p
 
   useEventListener(navigationEvent, navigation => {
     const tabInfo = {
-      name: navigation.title,
+      name: navigation.title || 'Bob',
       id: navigation.id,
       component: markdownEditorKey,
     }
