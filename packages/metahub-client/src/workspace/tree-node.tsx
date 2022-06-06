@@ -4,13 +4,11 @@ import { ChevronDown, ChevronRight, FileText, Folder } from 'react-feather';
 import { NodeHandlers } from 'react-arborist';
 import { NodeRendererProps } from 'react-arborist/dist/types'
 import { NavigationProps, withNavigation } from '../navigation'
-import { DocumentInfo } from 'metahub-protocol'
 import { TreeRow, TreeRowButton, TreeRowContents, TreeRowIcon, TreeRowInput, TreeRowSpacer } from './styles';
+import { TreeNodeData } from './types'
 
 const size = 16
 const color = '#999'
-
-export type TreeNodeData = DocumentInfo & { children: TreeNodeData[] }
 
 function MaybeToggleButton({ toggle, isOpen, isFolder, isSelected }: any) {
   if (isFolder) {
@@ -61,9 +59,16 @@ export const TreeNode = withNavigation((props: Props) => {
       handlers,
       tree,
     } = props
-    const folder = Array.isArray(data.children)
-    const open = state.isOpen
+    const isFolder = data.type == 'folder'
+    const { isOpen } = state
     const name = data.title
+
+    const onDoubleClick = isFolder
+      ? undefined
+      : () => {
+        const { id, title } = data
+        navigateTo({ id, title })
+      }
 
     return (
       <TreeRow
@@ -72,18 +77,15 @@ export const TreeNode = withNavigation((props: Props) => {
         className={classNames('row', state)}
         onClick={(e) => handlers.select(e, { selectOnClick: true })}
       >
-        <TreeRowContents className="row-contents" style={styles.indent} onDoubleClick={() => {
-          const { id, title } = data
-          navigateTo({ id, title })
-        }}>
+        <TreeRowContents className="row-contents" style={styles.indent} onDoubleClick={onDoubleClick}>
           <MaybeToggleButton
             toggle={handlers.toggle}
-            isOpen={open}
-            isFolder={folder}
+            isOpen={isOpen}
+            isFolder={isFolder}
             isSelected={state.isSelected}
           />
           <TreeRowIcon>
-            <Icon isFolder={folder} isSelected={state.isSelected}/>
+            <Icon isFolder={isFolder} isSelected={state.isSelected}/>
           </TreeRowIcon>
           {state.isEditing ? (
             <RenameForm defaultValue={name} {...handlers} />

@@ -1,5 +1,5 @@
 import React from 'react'
-import { WorkspacePanel } from '../workspace'
+import { WorkspaceTree } from '../workspace'
 import { fallbackPanel } from './panel-utility'
 import { TabContentFactory, TabContentFactoryMap } from './types'
 import { MarkdownEditor, markdownEditorKey } from '../markdown-editor'
@@ -7,7 +7,7 @@ import { TabNode } from 'flexlayout-react'
 
 
 export const tabComponentMap: TabContentFactoryMap = {
-  'workspace': () => <WorkspacePanel/>,
+  'workspace': () => <WorkspaceTree/>,
   [markdownEditorKey]: tab => <MarkdownEditor id={tab.getId()}></MarkdownEditor>,
   'structure': () => <div/>,
 }

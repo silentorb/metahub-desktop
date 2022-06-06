@@ -1,2 +1,2 @@
 export * from './tree-node'
-export * from './workspace-panel'
+export * from './workspace-tree'

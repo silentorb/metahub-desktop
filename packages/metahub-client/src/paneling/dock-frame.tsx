@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { TabContentFactoryMap } from './types'
 import { navigationEvent } from '../navigation'
 import { useEventListener } from 'happening-react'
-import { configWorkspaceLayout } from '../config'
+import { configWorkspaceLayoutState } from '../config'
 import { Actions, DockLocation, Layout, Model, TabNode } from 'flexlayout-react'
 import 'flexlayout-react/style/light.css'
 import { getTabContentFactory } from './panel-creation'
@@ -11,14 +11,15 @@ import { markdownEditorKey } from '../markdown-editor'
 import { DataResourceSetter, withOptionalLoading } from '../utility'
 import { defaultLayout, defaultPanels } from './default-layout'
 import * as O from 'fp-ts/Option'
+import { Option } from 'fp-ts/Option'
 
 interface Props {
   components: TabContentFactoryMap
-  layout: any
+  layout: Option<any>
   setLayout: DataResourceSetter<any>
 }
 
-export const DockFrame = withOptionalLoading(configWorkspaceLayout, 'layout', (props: Props) => {
+export const DockFrame = withOptionalLoading(configWorkspaceLayoutState, 'layout', (props: Props) => {
   const { components, layout, setLayout } = props
   const initialLayout = O.getOrElse(() => defaultLayout)(layout)
   const [model, setModel] = useState(Model.fromJson(initialLayout))

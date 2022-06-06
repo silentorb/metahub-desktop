@@ -17,3 +17,7 @@ body {
     /* Override the incredibly distracting rc-dock transition animation */
     transition: none !important;
 }
+
+.flexlayout__tab_button {
+    border-radius: 5px 5px 0 0;
+}

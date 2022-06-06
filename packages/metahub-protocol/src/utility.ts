@@ -2,7 +2,7 @@
 
 import { NonEmptyArray } from './types'
 
-function resolveNonEmptyArray<T>(array: T[]): NonEmptyArray<T> | [] {
+export function resolveNonEmptyArray<T>(array: T[]): NonEmptyArray<T> | [] {
   return array.length > 0
     ? array as NonEmptyArray<T>
     : []

@@ -1,9 +1,9 @@
 
-export function getConfigDirectory(root: string) {
-  return `${root}/.metahub`
+export function getProjectConfigDirectory(root: string) {
+  return `${root}/.metahub/config`
 }
 
 export const  getConfigFilePath = (root: string) => (key: string) => {
-  const configPath = getConfigDirectory(root)
+  const configPath = getProjectConfigDirectory(root)
   return `${configPath}/${key.replace(/\//, '.')}.json`
 }
