@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { DockFrame, tabComponentMap } from './paneling'
 import './styles.css'
 import { AppServices } from './types'
-import { NavigationContext, newNavigationProps } from './navigation'
+import { NavigationContext, NavigationManager, newNavigationProps } from './navigation'
 import { RecoilRoot } from 'recoil'
 import { setServices } from './api'
 
@@ -21,6 +21,7 @@ const App = (props: Props) => {
         <NavigationContext.Provider value={newNavigationProps()}>
           <DockFrame components={tabComponentMap}/>
         </NavigationContext.Provider>
+        <NavigationManager/>
       </RecoilRoot>
     </div>
   )

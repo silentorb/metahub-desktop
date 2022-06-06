@@ -14,8 +14,8 @@ export const linkPlugin = (props: NavigationProps) => createPlugin(() => {
       const plugin = new Plugin({
         props: {
           handleClickOn: (view, cursorPosition, node, nodePosition, event, direct) => {
-            if (direct) {
-              const offset = cursorPosition - nodePosition
+            if (direct && event.button === 0) {
+              const offset = cursorPosition - nodePosition - 1
               const child = node.nodeAt(offset)
               if (child) {
                 for (const mark of child.marks) {

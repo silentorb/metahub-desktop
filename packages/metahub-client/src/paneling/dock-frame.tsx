@@ -31,13 +31,19 @@ export const DockFrame = withOptionalLoading(configWorkspaceLayout, 'layout', (p
   // }, [layout])
 
   useEventListener(navigationEvent, navigation => {
-    const tabInfo = {
-      name: navigation.title || 'Bob',
-      id: navigation.id,
-      component: markdownEditorKey,
+    const { id } = navigation
+    const existing = model.getNodeById(id)
+    if (existing) {
+      model.doAction(Actions.selectTab(id))
+    } else {
+      const tabInfo = {
+        name: navigation.title,
+        id,
+        component: markdownEditorKey,
+      }
+      const action = Actions.addNode(tabInfo, defaultPanels.editor, DockLocation.CENTER, -1)
+      model.doAction(action)
     }
-    const action = Actions.addNode(tabInfo, defaultPanels.editor, DockLocation.CENTER, -1)
-    model.doAction(action)
   })
 
   const onChange = (model: Model) => {
