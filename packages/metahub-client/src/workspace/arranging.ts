@@ -1,15 +1,12 @@
 import { DocumentInfo } from 'metahub-protocol'
-import { Transform, TreeNodeData, TreeNodeFolder } from './types'
+import { TreeNodeData, TreeNodeFolder } from './types'
 
 // Sorts tree children by Directory/Doc first and Alphabetical second
 export const sortChildren = (children: TreeNodeData[]): TreeNodeData[] =>
-  children.sort((a, b) => {
-      const k = a.type !== b.type
-        ? a.type === 'folder' ? -1 : 1
-        : a.title.localeCompare(b.title)
-      console.log(k, a.title, b.title)
-      return k
-    }
+  children.sort((a, b) =>
+    a.type !== b.type
+      ? a.type === 'folder' ? -1 : 1
+      : a.title.localeCompare(b.title)
   )
 
 export const sortChildrenRecursive = (children: TreeNodeData[]): TreeNodeData[] =>

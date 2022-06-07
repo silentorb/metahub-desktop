@@ -13,3 +13,5 @@ export interface MarkdownDatabaseConfig {
 export interface MarkdownDatabaseCache {
   index: { [key: RecordPath]: RecordInfo }
 }
+
+export type SanitizedPath = string

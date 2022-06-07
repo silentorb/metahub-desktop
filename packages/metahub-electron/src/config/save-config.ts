@@ -4,18 +4,33 @@ import * as E from 'fp-ts/Either'
 import * as TE from 'fp-ts/TaskEither'
 import { TaskEither } from 'fp-ts/TaskEither'
 import path from 'path'
+import { AppState } from './types'
+import { getConfigElement, getConfigFilePath } from './utility'
 
-export const saveConfig = (filePath: string) => (config: any): TaskEither<Error, void> =>
-  pipe(
-    ensureDirectoryExists(path.dirname(filePath)),
-    TE.chain(
-      () => TE.fromEither(
-        E.tryCatch(
-          () => JSON.stringify(config, undefined, 2),
-          reason => new Error(`${reason}`
+export const saveConfig = (app: AppState) => (key: string) =>
+  (data: any): TaskEither<Error, void> =>
+    pipe(
+      key,
+      TE.fromEitherK(
+        getConfigElement(app),
+      ),
+      TE.chain(
+        config => pipe(
+          config,
+          getConfigFilePath(app.directories),
+          filePath => pipe(
+            ensureDirectoryExists(path.dirname(filePath)),
+            TE.chain(
+              () => TE.fromEither(
+                E.tryCatch(
+                  () => JSON.stringify(data, undefined, 2),
+                  reason => new Error(`${reason}`
+                  )
+                )
+              )
+            ),
+            TE.chain(writeFile(filePath))
           )
         )
       )
-    ),
-    TE.chain(writeFile(filePath))
-  )
+    )

@@ -5,6 +5,8 @@ export type RecordPath = string
 export type NonEmptyArray<T> = [T, ...T[]]
 export type NonEmptyStringArray = NonEmptyArray<string>
 
+export type Type<T> = new () => T
+
 export interface DocumentInfo {
   id: string
   title: string

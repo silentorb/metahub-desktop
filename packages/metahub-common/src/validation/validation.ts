@@ -1,7 +1,6 @@
 import { validate, ValidateNested, ValidationOptions } from 'class-validator'
 import { plainToInstance, Type } from 'class-transformer'
 import { ValidationError } from 'class-validator/types/validation/ValidationError'
-import { Task } from 'fp-ts/Task'
 import { TaskEither } from 'fp-ts/TaskEither'
 import * as TE from 'fp-ts/TaskEither'
 import { pipe } from 'fp-ts/function'
@@ -27,6 +26,14 @@ interface ValidationErrors extends Error {
   errors: ValidationError[]
 }
 
+export const validateCompositeValidationErrorMessage = (errors: ValidationError[]): string =>
+  errors.length === 0
+    ? 'Invalid object'
+    : errors
+      .filter(e => !!e.constraints)
+      .map(e => Object.values(e.constraints!).join(', '))
+      .join('; ')
+
 export const validateObject = <T>(type: any) => (object: any): TaskEither<Error, T> => {
   const converted = plainToInstance(type, object)
   return pipe(
@@ -37,7 +44,11 @@ export const validateObject = <T>(type: any) => (object: any): TaskEither<Error,
     TE.chain(
       errors => errors.length == 0
         ? TE.right(object)
-        : TE.left({ message: 'Invalid object format', errors, name: 'ValidationErrors' })
+        : TE.left({
+          name: 'ValidationErrors',
+          message: validateCompositeValidationErrorMessage(errors),
+          errors: JSON.parse(JSON.stringify(errors)),
+        })
     )
   )
   // const missingFieldErrors = validateMissingFields(metaData, converted)

@@ -45,17 +45,22 @@ export const withRequiredLoading = <T, K extends string, InnerProps>(
   }
 
 
-export const withOptionalLoading = <T, K extends string, InnerProps>(state: RecoilState<DataResource<T>>, key: K,
-                                                                     WrappedComponent: (props: InnerProps) => JSX.Element) =>
+export const withOptionalLoading = <T, K extends string, InnerProps>(
+  state: RecoilState<DataResource<T>>, key: K, defaultValue: () => T,
+  WrappedComponent: (props: InnerProps) => JSX.Element) =>
   (props: Omit<Omit<InnerProps, K>, `set${Capitalize<K>}`>): JSX.Element => {
-    const [value, set] = useRecoilState(state)
-    if (value === loadingState)
+    const [either, set] = useRecoilState(state)
+    if (either === loadingState)
       return <div>Loading</div>
 
-    const option = O.getRight(value)
+    const value = pipe(
+      either,
+      E.getOrElse(() => defaultValue())
+    )
+
     const nextProps = {
       ...props,
-      [key]: option,
+      [key]: value,
       ['set' + key.charAt(0).toUpperCase() + key.slice(1)]: set,
     }
 

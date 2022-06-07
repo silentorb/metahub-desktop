@@ -2,25 +2,23 @@ import React, { useEffect, useState } from 'react'
 import { Tree } from 'react-arborist'
 import { TreeNode } from './tree-node'
 import { DocumentInfo } from 'metahub-protocol'
-import { TreeConfig } from 'metahub-common'
+import { TreeState } from 'metahub-common'
 import { documentsState } from '../data'
 import { DataResourceSetter, withOptionalLoading, withRequiredLoading } from '../utility'
 import { arrangeDocumentTree } from './arranging'
 import { matchesId, modifyTreeNodesRecursive, setExpanded } from './transforming'
 import { configWorkspaceTreeState } from '../config'
-import * as O from 'fp-ts/Option'
-import { Option } from 'fp-ts/Option'
 import { TreeNodeData, TreeNodeFolder } from './types'
 import { right } from 'fp-ts/Either'
 
-const defaultTreeConfig = (): TreeConfig => ({
+const defaultTreeConfig = (): TreeState => ({
   expandedFolders: []
 })
 
 interface Props {
   documents: readonly DocumentInfo[]
-  treeConfig: Option<TreeConfig>
-  setTreeConfig: DataResourceSetter<TreeConfig>
+  treeConfig: TreeState
+  setTreeConfig: DataResourceSetter<TreeState>
 }
 
 export const newRootNode = (children: TreeNodeData[] = []): TreeNodeFolder => ({
@@ -31,14 +29,14 @@ export const newRootNode = (children: TreeNodeData[] = []): TreeNodeFolder => ({
   children,
 })
 
-export const WorkspaceTree = withOptionalLoading(configWorkspaceTreeState, 'treeConfig',
+export const WorkspaceTree = withOptionalLoading(configWorkspaceTreeState, 'treeConfig', defaultTreeConfig,
   withRequiredLoading(documentsState, 'documents',
     (props: Props) => {
       const { documents, treeConfig, setTreeConfig } = props
       const [tree, setTree] = useState<TreeNodeData>(newRootNode)
 
       useEffect(() => {
-        const { expandedFolders } = O.getOrElse(defaultTreeConfig)(treeConfig)
+        const { expandedFolders } = treeConfig
         const children = arrangeDocumentTree(expandedFolders)(documents)
         setTree(newRootNode(children))
       }, [documents, treeConfig])
@@ -47,7 +45,7 @@ export const WorkspaceTree = withOptionalLoading(configWorkspaceTreeState, 'tree
         const [modified, nextTree] = modifyTreeNodesRecursive(matchesId(id), setExpanded(isOpen))(tree)
         if (modified) {
           setTree(nextTree)
-          const previousTreeConfig = O.getOrElse(defaultTreeConfig)(treeConfig)
+          const previousTreeConfig = treeConfig
           const expandedFolders = isOpen
             ? previousTreeConfig.expandedFolders.concat(id)
             : previousTreeConfig.expandedFolders.filter(i => i !== id)

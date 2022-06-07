@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
     "composite": true,
-    "target": "es2020",
-    "outDir": "../../dist/node_modules/metahub-common",
-    "declarationMap": true,
+    "target": "es2015",
     "module": "CommonJS",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "declaration": true,
     "strict": true,
-    "rootDir": "./src",
     "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "tsBuildInfoFile": "../../dist/node_modules/metahub-common/tsconfig.tsbuildinfo"
   },
-  "include": ["./src/**/*", "./test/**/*", "src/package.json"],
+  "include": ["./src/**/*", "./test/**/*"],
   "exclude": ["node_modules"]
 }

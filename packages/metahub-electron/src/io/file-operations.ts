@@ -7,6 +7,7 @@ import * as O from 'fp-ts/Option'
 import { TaskEither } from 'fp-ts/TaskEither'
 import { pipe } from 'fp-ts/function'
 import { validateObject } from 'metahub-common'
+import { Type } from 'metahub-protocol'
 import { Option } from 'fp-ts/Option'
 import { Either } from 'fp-ts/Either'
 
@@ -51,10 +52,12 @@ export function readJsonFile(filePath: string): TaskEither<Error, any> {
   )
 }
 
-export const readValidatedJsonFile = <T>(type: new () => T) => (filePath: string): TaskEither<Error, T> =>
+export const readValidatedJsonFile = <T>(type: Type<T>) => (filePath: string): TaskEither<Error, T> =>
   pipe(
     readJsonFile(filePath),
-    validateObject(type),
+    TE.chain(
+      validateObject(type),
+    )
   )
 
 export const ensureDirectoryExists = (directoryPath: string): TaskEither<Error, Option<string>> =>
