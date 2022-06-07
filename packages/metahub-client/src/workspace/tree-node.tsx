@@ -60,6 +60,7 @@ export const TreeNode = withNavigation((props: Props) => {
       tree,
     } = props
     const isFolder = data.type == 'folder'
+    const isActive = 'isActive' in data && data.isActive
     const { isOpen } = state
     const name = data.title
 
@@ -77,7 +78,7 @@ export const TreeNode = withNavigation((props: Props) => {
         className={classNames('row', state)}
         onClick={(e) => handlers.select(e, { selectOnClick: true })}
       >
-        <TreeRowContents className="row-contents" style={styles.indent} onDoubleClick={onDoubleClick}>
+        <TreeRowContents className="row-contents" style={styles.indent} onDoubleClick={onDoubleClick} isActive={isActive}>
           <MaybeToggleButton
             toggle={handlers.toggle}
             isOpen={isOpen}

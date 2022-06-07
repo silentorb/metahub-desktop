@@ -1,8 +1,10 @@
+import * as E from 'fp-ts/Either'
 import { Either, left, right } from 'fp-ts/Either'
 import { DefaultValue, WrappedValue } from 'recoil'
 import * as TE from 'fp-ts/TaskEither'
+import * as O from 'fp-ts/Option'
+import { none, Option } from 'fp-ts/Option'
 import { AppServices } from '../types'
-import * as E from 'fp-ts/Either'
 
 let services: AppServices
 
@@ -39,7 +41,12 @@ export const setDataResource = <T>(setSelf: SetSelf<DataResource<T>>) =>
     }
   )
 
-export const ifDataResourceIsReady = <T>(action: (value: T) => void) => (resource: DataResource<T>) => {
+export const ignoreLoading = <T>(resource: DataResource<T>): Option<T> =>
+  resource === loadingState
+    ? none
+    : O.getRight(resource)
+
+export const ifDataResourceIsReady = <T, O>(action: (value: T) => O) => (resource: DataResource<T>) => {
   if (resource !== loadingState) {
     E.match(() => {
     }, action)(resource)

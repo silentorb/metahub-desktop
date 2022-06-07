@@ -41,18 +41,18 @@ export const stateWorkspaceTree: ConfigElement<TreeState, 'state/workspace/tree'
   validationType: CTreeState,
 }
 
-export interface ActiveDocumentState {
-  activeDocument?: string
-}
-
-export class CActiveDocumentState implements ActiveDocumentState {
-  @IsString()
-  @IsOptional()
-  activeDocument?: string
-}
-
-export const stateActiveDocument: ConfigElement<ActiveDocumentState, 'state/workspace/activeDocument'> = {
-  key: 'state/workspace/activeDocument',
-  storageLayer: StorageLayer.project,
-  validationType: CActiveDocumentState,
-}
+// export interface ActiveDocumentState {
+//   activeDocument?: string
+// }
+//
+// export class CActiveDocumentState implements ActiveDocumentState {
+//   @IsString()
+//   @IsOptional()
+//   activeDocument?: string
+// }
+//
+// export const stateActiveDocument: ConfigElement<ActiveDocumentState, 'state/workspace/activeDocument'> = {
+//   key: 'state/workspace/activeDocument',
+//   storageLayer: StorageLayer.project,
+//   validationType: CActiveDocumentState,
+// }

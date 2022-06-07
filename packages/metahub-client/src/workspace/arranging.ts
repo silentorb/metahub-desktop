@@ -17,7 +17,7 @@ export const sortChildrenRecursive = (children: TreeNodeData[]): TreeNodeData[] 
         : node
     )
 
-export const arrangeDocumentTree = (expandedFolders: string[]) => (documents: readonly DocumentInfo[]): TreeNodeData[] => {
+export const arrangeDocumentTree = (activeDocument: string | undefined, expandedFolders: string[]) => (documents: readonly DocumentInfo[]): TreeNodeData[] => {
   const result: TreeNodeData[] = []
   const directories: Map<string, TreeNodeFolder> = new Map()
   for (const info of documents) {
@@ -26,21 +26,22 @@ export const arrangeDocumentTree = (expandedFolders: string[]) => (documents: re
       let node: TreeNodeData
       if (i < path.length - 1) {
         const subPath = path.slice(0, i + 1)
-        const key = subPath.join('/')
-        if (directories.has(key))
+        const id = subPath.join('/')
+        if (directories.has(id))
           continue
 
         node = {
-          id: subPath.join('/'),
+          id,
           type: 'folder',
-          isOpen: expandedFolders.includes(key),
+          isOpen: expandedFolders.includes(id),
           title: subPath[subPath.length - 1],
           children: []
         }
-        directories.set(key, node)
+        directories.set(id, node)
       } else {
         node = {
           type: 'document',
+          isActive: activeDocument === info.id,
           ...info,
         }
       }

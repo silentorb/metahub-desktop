@@ -8,6 +8,7 @@ export interface TreeNodeFolder extends Omit<DocumentInfo, 'path'> {
 
 export interface TreeNodeDocument extends Omit<DocumentInfo, 'path'> {
   type: 'document'
+  isActive: boolean
 }
 
 export type TreeNodeData = TreeNodeFolder | TreeNodeDocument

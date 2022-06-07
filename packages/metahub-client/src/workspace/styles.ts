@@ -29,7 +29,11 @@ export const TreeRow = styled.div`
   }
 `
 
-export const TreeRowContents = styled.div`
+export interface TreeRowContentsProps {
+  isActive: boolean
+}
+
+export const TreeRowContents = styled.div<TreeRowContentsProps>`
   font-size: 13px;
   height: 100%;
   display: flex;
@@ -38,7 +42,7 @@ export const TreeRowContents = styled.div`
   width: 100%;
   border: 2px solid transparent;
   border-radius: 4px;
-
+  font-weight: ${props => props.isActive ? 'bold' : 'normal'};
 `
 
 export const TreeRowIcon = styled.i`
