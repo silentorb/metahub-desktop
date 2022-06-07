@@ -1,24 +1,12 @@
 import { newServer } from '../server'
 import { app, BrowserWindow } from 'electron'
-import { program } from 'commander'
 import path from 'path'
 import { newApi } from './api'
+import { loadPackageInfo } from './packaging'
 
 export function newApp(sourcePath: string) {
 
-  const server = newServer({
-      database: {
-        path: sourcePath,
-      }
-    })
-
   const createWindow = async () => {
-    const options = program.opts()
-    const { source } = options
-    if (!source)
-      throw new Error('--source CLI argument is temporarily required')
-
-
     const win = new BrowserWindow({
       width: 800,
       height: 600,
@@ -33,6 +21,13 @@ export function newApp(sourcePath: string) {
   }
 
   app.whenReady().then(async () => {
+    const packageInfo = await loadPackageInfo(sourcePath)
+    const server = newServer({
+      database: {
+        path: sourcePath,
+      }
+    })
+
     newApi(server)
     await createWindow()
   })

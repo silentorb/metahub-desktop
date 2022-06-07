@@ -1,5 +1,5 @@
 import { ConfigElement, StorageLayer } from './types'
-import { IsArray, IsObject, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsInt, IsObject, IsOptional, IsString, Max, Min } from 'class-validator'
 
 export interface LayoutState {
   layout: any
@@ -56,3 +56,20 @@ export const stateWorkspaceTree: ConfigElement<TreeState, 'state/workspace/tree'
 //   storageLayer: StorageLayer.project,
 //   validationType: CActiveDocumentState,
 // }
+
+export interface ProjectsState {
+  recentProjects: string[]
+}
+
+export class CProjectsState implements ProjectsState {
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
+  recentProjects: string[] = []
+}
+
+export const stateProjects: ConfigElement<ProjectsState, 'state/workspace/layout'> = {
+  key: 'state/workspace/layout',
+  storageLayer: StorageLayer.global,
+  validationType: CProjectsState,
+}

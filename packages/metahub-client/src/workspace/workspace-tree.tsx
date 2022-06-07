@@ -12,7 +12,7 @@ import { TreeNodeData, TreeNodeFolder } from './types'
 import { right } from 'fp-ts/Either'
 import { useRecoilValue } from 'recoil'
 import { activeDocumentState } from '../state'
-import { TreeApi } from 'react-arborist/dist/tree-api'
+import { TreeApi } from 'react-arborist'
 
 const defaultTreeConfig = (): TreeState => ({
   expandedFolders: []
