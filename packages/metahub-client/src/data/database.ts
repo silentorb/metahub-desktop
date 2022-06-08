@@ -1,6 +1,6 @@
 import React from 'react'
 import { DataDocument, DocumentDatabase, DocumentInfo } from 'metahub-protocol'
-import { DatabaseStub } from './database-stub'
+import { newDatabaseStub } from 'metahub-common'
 import { contextWrapper } from '../utility'
 import { atom, atomFamily } from 'recoil'
 import { pipe } from 'fp-ts/function'
@@ -12,7 +12,7 @@ export interface DatabaseProps {
 }
 
 export const DatabaseContext = React.createContext<DatabaseProps>({
-  database: new DatabaseStub(),
+  database: newDatabaseStub(),
 })
 
 export const withDatabase = contextWrapper(DatabaseContext)
@@ -36,14 +36,14 @@ export const documentState = atomFamily<DataResource<DataDocument>, string>({
   effects: id => [
     ({ setSelf, onSet }) => {
       pipe(
-        getServices().database.getRecordContent(id),
+        getServices().database.getRecordContent({ id }),
         setDataResource(setSelf),
       )()
 
       onSet(
-        ifDataResourceIsReady(value =>
+        ifDataResourceIsReady(content =>
           pipe(
-            getServices().database.writeRecord(id, value),
+            getServices().database.writeRecord({ id, content }),
             TE.mapLeft(error => console.error(`Could not save document ${id} (${error.message})`))
           )()
         )

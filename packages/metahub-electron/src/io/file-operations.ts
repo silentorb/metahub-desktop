@@ -10,12 +10,13 @@ import { validateObject } from 'metahub-common'
 import { Type } from 'metahub-protocol'
 import { Option } from 'fp-ts/Option'
 import { Either } from 'fp-ts/Either'
+import { resolveDirectoryPath } from '../markdown-db'
 
 export function getFilesRecursive(fileOrDirectory: string): string[] {
   if (fileOrDirectory == '.' || fileOrDirectory == '..')
     return []
 
-  const fullPath = path.resolve(fileOrDirectory)
+  const fullPath = resolveDirectoryPath(fileOrDirectory)
 
   if (!fs.existsSync(fullPath))
     throw new Error(`Could not find source directory: "${fullPath}"`)

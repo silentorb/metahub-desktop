@@ -3,8 +3,8 @@ import { Type } from 'metahub-protocol'
 import { IsOptional, IsString } from 'class-validator'
 
 export enum StorageLayer {
-  project = 'project',
-  global = 'global',
+  projectMeta = 'projectMeta',
+  globalMeta = 'globalMeta',
 }
 
 export interface ConfigElement<T, K extends string> {
@@ -13,7 +13,7 @@ export interface ConfigElement<T, K extends string> {
   validationType: Type<T>
 }
 
-export interface Application {
+export interface ConfigStorage {
   loadConfig<T>(key: string): TaskEither<Error, T>
 
   saveConfig<T>(key: string, data: T): TaskEither<Error, void>

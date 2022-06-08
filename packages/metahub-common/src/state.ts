@@ -20,7 +20,7 @@ export class CLayoutState implements LayoutState {
 
 export const stateWorkspaceLayout: ConfigElement<LayoutState, 'state/workspace/layout'> = {
   key: 'state/workspace/layout',
-  storageLayer: StorageLayer.project,
+  storageLayer: StorageLayer.projectMeta,
   validationType: CLayoutState,
 }
 
@@ -37,7 +37,7 @@ export class CTreeState implements TreeState {
 
 export const stateWorkspaceTree: ConfigElement<TreeState, 'state/workspace/tree'> = {
   key: 'state/workspace/tree',
-  storageLayer: StorageLayer.project,
+  storageLayer: StorageLayer.projectMeta,
   validationType: CTreeState,
 }
 
@@ -70,6 +70,6 @@ export class CProjectsState implements ProjectsState {
 
 export const stateProjects: ConfigElement<ProjectsState, 'state/workspace/layout'> = {
   key: 'state/workspace/layout',
-  storageLayer: StorageLayer.global,
+  storageLayer: StorageLayer.globalMeta,
   validationType: CProjectsState,
 }

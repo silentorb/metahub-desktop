@@ -1,8 +1,8 @@
 import { DocumentDatabase } from 'metahub-protocol'
 import { AppServices } from 'metahub-client'
-import { Application } from 'metahub-common'
+import { ConfigStorage } from 'metahub-common'
 
-export interface IElectronAPI extends DocumentDatabase, Application {
+export interface IElectronAPI extends DocumentDatabase, ConfigStorage {
 }
 
 declare global {
@@ -14,7 +14,7 @@ declare global {
 export function newAppServices(): AppServices {
   const api = window.electronAPI
   return {
-    application: api,
+    config: api,
     database: api,
   }
 }

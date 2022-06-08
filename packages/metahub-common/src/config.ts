@@ -20,6 +20,6 @@ export class CLayoutConfig implements LayoutConfig {
 
 export const configWorkspaceLayout: ConfigElement<LayoutConfig, 'config/workspace/layout'> = {
   key: 'config/workspace/layout',
-  storageLayer: StorageLayer.global,
+  storageLayer: StorageLayer.globalMeta,
   validationType: CLayoutConfig,
 }

@@ -18,17 +18,17 @@ export type AsyncResponse<T> = TaskEither<Error, T>
 export interface DataReader<T> {
   getAllRecords(): AsyncResponse<readonly DocumentInfo[]>
 
-  getRecordContent(id: string): AsyncResponse<T>
+  getRecordContent(props: { id: string }): AsyncResponse<T>
 }
 
 export interface DataWriter<T> {
-  copyRecord(previous: string, next: string): AsyncResponse<void>
+  copyRecord(props: { previous: string, next: string }): AsyncResponse<void>
 
-  deleteRecord(path: string): AsyncResponse<void>
+  deleteRecord(props: { path: string }): AsyncResponse<void>
 
-  moveRecord(previous: string, next: string): AsyncResponse<void>
+  moveRecord(props: { previous: string, next: string }): AsyncResponse<void>
 
-  writeRecord(path: string, content: T): AsyncResponse<void>
+  writeRecord(props: { id: string, content: T }): AsyncResponse<void>
 }
 
 export interface DataSource<T> extends DataReader<T>, DataWriter<T> {

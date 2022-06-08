@@ -1,34 +1,38 @@
-import { newServer } from '../server'
-import { app, BrowserWindow } from 'electron'
-import path from 'path'
+import { app } from 'electron'
 import { newApi } from './api'
 import { loadPackageInfo } from './packaging'
+import { createWindow } from './window'
+import { PackageInfo, StorageLayer } from 'metahub-common'
+import { AppDirectories, AppDirectory, AppState, getConfigDirectory } from '../config'
+import { newMarkdownDatabase, resolveDirectoryPath, sanitizeDirectoryPath, SanitizedPath } from '../markdown-db'
+import { AppServices } from 'metahub-client'
+import { newConfigStorage } from './config'
+import { configElements } from '../config/elements'
 
-export function newApp(sourcePath: string) {
-
-  const createWindow = async () => {
-    const win = new BrowserWindow({
-      width: 800,
-      height: 600,
-      webPreferences: {
-        preload: path.resolve(__dirname, '..', 'preload', 'preload.js')
-      }
-    })
-
-    win.maximize()
-    await win.loadFile('../client/index.html')
-    win.webContents.openDevTools()
+export function newServices(sourcePath: SanitizedPath, packageInfo: PackageInfo): AppServices {
+  const databaseRoot = resolveDirectoryPath(sourcePath, packageInfo.root)
+  const directories: AppDirectories = {
+    [AppDirectory.projectRoot]: sourcePath,
+    [StorageLayer.projectMeta]: getConfigDirectory(sourcePath),
+    [StorageLayer.globalMeta]: getConfigDirectory(sanitizeDirectoryPath(process.cwd())),
+  }
+  const state: AppState = {
+    directories,
+    configElements,
   }
 
-  app.whenReady().then(async () => {
-    const packageInfo = await loadPackageInfo(sourcePath)
-    const server = newServer({
-      database: {
-        path: sourcePath,
-      }
-    })
+  return {
+    config: newConfigStorage(state),
+    database: newMarkdownDatabase({ root: databaseRoot })
+  }
+}
 
-    newApi(server)
+export function newApp(sourcePath: SanitizedPath) {
+  app.whenReady().then(async () => {
+    const packageInfo = await loadPackageInfo(sourcePath)()
+    const services = newServices(sourcePath, packageInfo)
+
+    newApi(() => services)
     await createWindow()
   })
 

@@ -1,7 +1,7 @@
 import { DocumentDatabase } from 'metahub-protocol'
-import { Application } from 'metahub-common'
+import { ConfigStorage } from 'metahub-common'
 
 export interface AppServices {
-  application: Application
+  config: ConfigStorage
   database: DocumentDatabase
 }

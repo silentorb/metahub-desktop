@@ -1,5 +1,6 @@
 import { newApp } from './app/app'
 import { program } from 'commander'
+import { sanitizeDirectoryPath } from './markdown-db'
 
 if (process.env.NODE_ENV !== 'production') {
   require('source-map-support').install()
@@ -12,10 +13,11 @@ export function main() {
 
   program.parse()
   const options = program.opts()
-  const { source } = options
-  if (!source)
+  const rawSource = options.source
+  if (!rawSource)
     throw new Error('--source CLI argument is temporarily required')
 
+  const source = sanitizeDirectoryPath(rawSource)
   newApp(source)
 }
 

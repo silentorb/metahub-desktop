@@ -6,9 +6,8 @@ import { AppState } from './types'
 
 export const loadConfig = (app: AppState) =>
   flow(
-    TE.fromEitherK(
-      getConfigElement(app),
-    ),
+    getConfigElement(app.configElements),
+    TE.fromEither,
     TE.chain(
       config => pipe(
         config,

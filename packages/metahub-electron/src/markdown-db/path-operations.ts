@@ -2,7 +2,7 @@ import * as path from 'path'
 import { NonEmptyStringArray } from 'metahub-protocol'
 import { RecordInfo, SanitizedPath } from './types'
 import { Either, left, right } from 'fp-ts/Either'
-import { pipe } from 'fp-ts/function'
+import { flow, pipe } from 'fp-ts/function'
 
 export function getFilePathWithoutExtension(file: string): string {
   const match = file.match(/^(.*)\.[^.]+$/)
@@ -16,10 +16,27 @@ export function getFileNameWithoutExtension(file: string): string {
 export const sanitizeDirectoryPath = (path: string): SanitizedPath =>
   path.replace(/\\+/g, '/')
 
+export const resolveDirectoryPath = (...args: string[]): SanitizedPath =>
+  pipe(
+    path.resolve(...args),
+    sanitizeDirectoryPath,
+  )
+
+export const relativeDirectoryPath = (from: string, to: string): SanitizedPath =>
+  pipe(
+    path.relative(from, to),
+    sanitizeDirectoryPath,
+  )
+
+export const joinPaths = (...args: string[]): SanitizedPath =>
+  pipe(
+    path.join(...args),
+    sanitizeDirectoryPath,
+  )
+
 export const getRecordInfoFromAbsolutePath = (rootPath: string) => (filePath: string): Either<Error, Omit<RecordInfo, 'title'>> => {
   const id = pipe(
-    path.relative(rootPath, filePath),
-    sanitizeDirectoryPath,
+    relativeDirectoryPath(rootPath, filePath),
     getFilePathWithoutExtension,
   )
 

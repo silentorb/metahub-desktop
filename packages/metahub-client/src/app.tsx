@@ -12,7 +12,7 @@ interface Props {
 }
 
 const App = (props: Props) => {
-  const { application, database } = props.services
+  const { config, database } = props.services
   setServices(props.services)
 
   return (

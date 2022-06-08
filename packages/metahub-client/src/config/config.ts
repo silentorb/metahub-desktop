@@ -11,7 +11,7 @@ export const configState = <T, K extends string>(config: ConfigElement<T, K>) =>
     effects: [
       ({ setSelf }) => {
         pipe(
-          getServices().application.loadConfig<T>(config.key),
+          getServices().config.loadConfig<T>(config.key),
           TE.mapLeft(error => {
             console.error(`There was an error loading config ${config.key}: ${error.message}`)
             return error
@@ -23,7 +23,7 @@ export const configState = <T, K extends string>(config: ConfigElement<T, K>) =>
         onSet(
           ifDataResourceIsReady(value =>
             pipe(
-              getServices().application.saveConfig(config.key, value),
+              getServices().config.saveConfig(config.key, value),
               TE.mapLeft(error => console.error(`Could not save config ${config.key} (${error.message})`))
             )
           )

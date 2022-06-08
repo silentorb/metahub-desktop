@@ -7,7 +7,7 @@ export interface RecordInfo extends DocumentInfo {
 export type RecordDocument = DataDocument & RecordInfo
 
 export interface MarkdownDatabaseConfig {
-  path: string
+  root: string
 }
 
 export interface MarkdownDatabaseCache {

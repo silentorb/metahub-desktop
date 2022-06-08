@@ -7,13 +7,11 @@ import path from 'path'
 import { AppState } from './types'
 import { getConfigElement, getConfigFilePath } from './utility'
 
-export const saveConfig = (app: AppState) => (key: string) =>
-  (data: any): TaskEither<Error, void> =>
+export const saveConfig = (app: AppState) => (key: string, data: any): TaskEither<Error, void> =>
     pipe(
       key,
-      TE.fromEitherK(
-        getConfigElement(app),
-      ),
+      getConfigElement(app.configElements),
+      TE.fromEither,
       TE.chain(
         config => pipe(
           config,
