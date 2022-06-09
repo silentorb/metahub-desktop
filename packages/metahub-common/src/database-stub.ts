@@ -1,4 +1,4 @@
-import { DocumentDatabase, } from '../metahub-protocol'
+import { DocumentDatabase, } from 'metahub-protocol'
 import * as TE from 'fp-ts/TaskEither'
 
 const voidSuccessResponse = TE.right(undefined)

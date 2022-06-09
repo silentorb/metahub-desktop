@@ -1,5 +1,5 @@
 import { DataSource } from 'metahub-protocol'
-import { MarkdownDatabase, MarkdownDatabaseConfig } from '../markdown-db'
+import { MarkdownDatabaseConfig } from '../markdown-db'
 
 export interface ServerConfig {
   database: MarkdownDatabaseConfig
@@ -10,9 +10,9 @@ export interface Server {
   database: DataSource<any>
 }
 
-export function newServer(config: ServerConfig): Server {
-  return {
-    config,
-    database: new MarkdownDatabase(config.database)
-  }
-}
+// export function newServer(config: ServerConfig): Server {
+//   return {
+//     config,
+//     database: new MarkdownDatabase(config.database)
+//   }
+// }

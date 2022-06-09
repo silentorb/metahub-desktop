@@ -1,4 +1,4 @@
-import { newApp } from './app/app'
+import { newApp } from './app'
 import { program } from 'commander'
 import { sanitizeDirectoryPath } from './markdown-db'
 
