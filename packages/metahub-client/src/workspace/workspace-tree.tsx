@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Tree } from 'react-arborist'
+import { Tree, TreeApi } from 'react-arborist'
 import { TreeNode } from './tree-node'
 import { DocumentInfo } from 'metahub-protocol'
 import { TreeState } from 'metahub-common'
@@ -12,7 +12,8 @@ import { TreeNodeData, TreeNodeFolder } from './types'
 import { right } from 'fp-ts/Either'
 import { useRecoilValue } from 'recoil'
 import { activeDocumentState } from '../state'
-import { TreeApi } from 'react-arborist'
+import { useEventListener } from 'happening-react'
+import { CommonCommands } from 'metahub-common/src/commands'
 
 const defaultTreeConfig = (): TreeState => ({
   expandedFolders: []
@@ -39,6 +40,10 @@ export const WorkspaceTree = withOptionalLoading(configWorkspaceTreeState, 'tree
       const [treeData, setTreeData] = useState<TreeNodeData>(newRootNode)
       const activeDocument = useRecoilValue(activeDocumentState)
       const tree = useRef<TreeApi<TreeNodeData>>(null)
+
+      useEventListener(CommonCommands.newDocument, () => {
+        
+      })
 
       useEffect(() => {
         const { expandedFolders } = treeConfig

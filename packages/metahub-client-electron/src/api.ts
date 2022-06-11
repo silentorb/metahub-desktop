@@ -1,5 +1,6 @@
 import { DocumentDatabase } from 'metahub-protocol'
 import { AppServices, ConfigStorage } from 'metahub-common'
+import { invokeEvent } from 'happening-react'
 
 export interface IElectronAPI extends DocumentDatabase, ConfigStorage {
 }
@@ -15,5 +16,6 @@ export function newAppServices(): AppServices {
   return {
     config: api,
     database: api,
+    sendMessage: key => () => invokeEvent(() => key, undefined),
   }
 }

@@ -1,6 +1,7 @@
 import { TaskEither } from 'fp-ts/TaskEither'
 import { DocumentDatabase, Type } from 'metahub-protocol'
 import { IsOptional, IsString } from 'class-validator'
+import { SendMessage } from 'metahub-electron/src/app/types'
 
 export enum StorageLayer {
   projectMeta = 'projectMeta',
@@ -40,4 +41,5 @@ export class CPackageInfo implements PackageInfo {
 export interface AppServices {
   config: ConfigStorage
   database: DocumentDatabase
+  sendMessage: SendMessage
 }

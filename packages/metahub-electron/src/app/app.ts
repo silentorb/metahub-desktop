@@ -25,7 +25,8 @@ export const newServices = (sourcePath: SanitizedPath) => (packageInfo: PackageI
 
   return {
     config: newConfigStorage(state),
-    database: newMarkdownDatabase({ root: databaseRoot })
+    database: newMarkdownDatabase({ root: databaseRoot }),
+    sendMessage: () => () => {},
   }
 }
 
@@ -34,6 +35,7 @@ export function newEmptyServices(): AppServices {
   return {
     config: newConfigStub(),
     database: newDatabaseStub(),
+    sendMessage: () => () => {},
   }
 }
 
@@ -48,7 +50,7 @@ export function newApp(sourcePath: SanitizedPath) {
     )()
 
     newApi(() => services)
-    await createWindow()
+    await createWindow(services.sendMessage)
   })
 
   app.on('window-all-closed', () => {
