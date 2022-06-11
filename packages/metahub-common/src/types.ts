@@ -1,5 +1,5 @@
 import { TaskEither } from 'fp-ts/TaskEither'
-import { Type } from 'metahub-protocol'
+import { DocumentDatabase, Type } from 'metahub-protocol'
 import { IsOptional, IsString } from 'class-validator'
 
 export enum StorageLayer {
@@ -35,4 +35,9 @@ export class CPackageInfo implements PackageInfo {
   @IsString()
   @IsOptional()
   root: string = '.'
+}
+
+export interface AppServices {
+  config: ConfigStorage
+  database: DocumentDatabase
 }

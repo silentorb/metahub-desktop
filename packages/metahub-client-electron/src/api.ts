@@ -1,6 +1,5 @@
 import { DocumentDatabase } from 'metahub-protocol'
-import { AppServices } from 'metahub-client'
-import { ConfigStorage } from 'metahub-common'
+import { AppServices, ConfigStorage } from 'metahub-common'
 
 export interface IElectronAPI extends DocumentDatabase, ConfigStorage {
 }

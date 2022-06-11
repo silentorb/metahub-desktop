@@ -3,7 +3,7 @@ import { saveConfig } from '../config'
 import { TaskEither } from 'fp-ts/TaskEither'
 import { Either } from 'fp-ts/Either'
 import { loadConfig } from '../config/load-config'
-import { AppServices } from 'metahub-client'
+import { AppServices } from 'metahub-common'
 
 export function newApi(services: () => AppServices) {
   function handle<A, T>(channel: string, handler: () => (...a: any[]) => TaskEither<Error, T>): void {

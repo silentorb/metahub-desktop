@@ -1,5 +1,6 @@
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, Menu } from 'electron'
 import { resolveDirectoryPath } from '../markdown-db'
+import { newMenus } from './menus'
 
 export const createWindow = async () => {
   const win = new BrowserWindow({
@@ -13,4 +14,7 @@ export const createWindow = async () => {
   win.maximize()
   await win.loadFile('../client/index.html')
   win.webContents.openDevTools()
+
+  const menu = Menu.buildFromTemplate(newMenus())
+  Menu.setApplicationMenu(menu)
 }

@@ -4,7 +4,7 @@ import { DefaultValue, WrappedValue } from 'recoil'
 import * as TE from 'fp-ts/TaskEither'
 import * as O from 'fp-ts/Option'
 import { none, Option } from 'fp-ts/Option'
-import { AppServices } from '../types'
+import { AppServices } from 'metahub-common'
 
 let services: AppServices
 
