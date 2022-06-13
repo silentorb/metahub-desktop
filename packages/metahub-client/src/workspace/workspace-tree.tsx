@@ -14,6 +14,8 @@ import { useRecoilValue } from 'recoil'
 import { activeDocumentState } from '../state'
 import { useEventListener } from 'happening-react'
 import { CommonCommands } from 'metahub-common/src/commands'
+import Modal from 'react-modal'
+import { NewDocumentForm } from './new-document-form'
 
 const defaultTreeConfig = (): TreeState => ({
   expandedFolders: []
@@ -40,9 +42,10 @@ export const WorkspaceTree = withOptionalLoading(configWorkspaceTreeState, 'tree
       const [treeData, setTreeData] = useState<TreeNodeData>(newRootNode)
       const activeDocument = useRecoilValue(activeDocumentState)
       const tree = useRef<TreeApi<TreeNodeData>>(null)
+      const [newModalIsOpen, setNewModalIsOpen] = useState(false)
 
       useEventListener(CommonCommands.newDocument, () => {
-        
+
       })
 
       useEffect(() => {
@@ -76,7 +79,37 @@ export const WorkspaceTree = withOptionalLoading(configWorkspaceTreeState, 'tree
         }
       }
 
-      return <Tree ref={tree} data={treeData} onToggle={onToggle} hideRoot>{TreeNode}</Tree>
+      const newButtonEnabled = tree.current?.getSelectedIds().length === 1
+
+      const onNew = () => {
+        if (!newButtonEnabled)
+          return
+
+        setNewModalIsOpen(true)
+      }
+
+      const closeModal = () => {
+        setNewModalIsOpen(false)
+      }
+
+      const onSubmitNew = (newProps: {name: string}) => {
+        console.log(newProps.name)
+        closeModal()
+      }
+
+      return <div>
+        <button disabled={!newButtonEnabled} onClick={onNew}>New</button>
+        <Tree ref={tree} data={treeData} onToggle={onToggle}>{TreeNode}</Tree>
+        <Modal
+          isOpen={newModalIsOpen}
+          // onAfterOpen={afterOpenModal}
+          onRequestClose={closeModal}
+          // style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <NewDocumentForm onSubmit={onSubmitNew}/>
+        </Modal>
+      </div>
     }
   )
 )

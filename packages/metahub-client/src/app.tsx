@@ -2,10 +2,13 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { DockFrame, tabComponentMap } from './paneling'
 import './styles.css'
-import { AppServices } from './types'
 import { NavigationContext, NavigationManager, newNavigationProps } from './navigation'
 import { RecoilRoot } from 'recoil'
 import { setServices } from './api'
+import Modal from 'react-modal'
+import { AppServices } from 'metahub-common'
+
+Modal.setAppElement('#root')
 
 interface Props {
   services: AppServices

@@ -1,18 +1,9 @@
-import {
-  AsyncResponse,
-  DataDocument,
-  DataReader,
-  DataSource,
-  DataWriter,
-  DocumentInfo,
-  RecordPath,
-} from 'metahub-protocol'
+import { AsyncResponse, DataDocument, DataReader, DataSource, DataWriter, DocumentInfo, } from 'metahub-protocol'
 import { gatherFiles, loadDocument } from './reading'
 import { MarkdownDatabaseCache, MarkdownDatabaseConfig, SanitizedPath } from './types'
 import { updateRecord } from './writing'
-import * as path from 'path'
 import * as TE from 'fp-ts/TaskEither'
-import { pipe } from 'fp-ts/function'
+import { flow, pipe } from 'fp-ts/function'
 
 const voidSuccessResponse = TE.right(undefined)
 
@@ -47,8 +38,14 @@ export const newMarkdownDatabaseReader = (cache: MarkdownDatabaseCache, root: Sa
 }
 
 export const newMarkdownDatabaseWriter = (cache: MarkdownDatabaseCache, root: SanitizedPath): DataReader<DataDocument> => {
-  const getDocumentPath = (id: string): string =>
-    `${root}/${id}.md`
+  const getExistingDocumentPath = (id: string) => {
+    const existing = cache.index[id]
+    if (existing)
+      return TE.right(existing.storagePath)
+
+    // return TE.left(new Error(`Cache does not have a record for ${id}`))
+    return TE.right(`${root}/${id}.md`)
+  }
 
   return {
     getAllRecords: (): AsyncResponse<readonly DocumentInfo[]> => {
@@ -63,10 +60,12 @@ export const newMarkdownDatabaseWriter = (cache: MarkdownDatabaseCache, root: Sa
       )
     },
 
-    getRecordContent: ({ id }): AsyncResponse<DataDocument> => {
-      return loadDocument(root)(getDocumentPath(id))
-    },
-
+    getRecordContent:
+      flow(
+        ({ id }) => id,
+        getExistingDocumentPath,
+        TE.chain(loadDocument(root)),
+      )
   }
 }
 
