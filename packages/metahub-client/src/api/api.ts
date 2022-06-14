@@ -41,8 +41,8 @@ export const setDataResource = <T>(setSelf: SetSelf<DataResource<T>>) =>
     }
   )
 
-export const ignoreLoading = <T>(resource: DataResource<T>): Option<T> =>
-  resource === loadingState
+export const ignoreLoading = <T>(resource: DataResource<T> | DefaultValue): Option<T> =>
+  resource === loadingState || resource instanceof DefaultValue
     ? none
     : O.getRight(resource)
 

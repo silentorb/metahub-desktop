@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Tree, TreeApi } from 'react-arborist'
 import { TreeNode } from './tree-node'
-import { DocumentInfo } from 'metahub-protocol'
+import { DocumentInfo, NonEmptyStringArray } from 'metahub-protocol'
 import { TreeState } from 'metahub-common'
 import { documentsState } from '../data'
 import { DataResourceSetter, withOptionalLoading, withRequiredLoading } from '../utility'
@@ -9,7 +9,7 @@ import { arrangeDocumentTree } from './arranging'
 import { matchesId, modifyTreeNodesRecursive, setExpanded } from './transforming'
 import { configWorkspaceTreeState } from '../config'
 import { TreeNodeData, TreeNodeFolder } from './types'
-import { right } from 'fp-ts/Either'
+import * as E from 'fp-ts/Either'
 import { useRecoilValue } from 'recoil'
 import { activeDocumentState } from '../state'
 import { useEventListener } from 'happening-react'
@@ -23,6 +23,7 @@ const defaultTreeConfig = (): TreeState => ({
 
 interface Props {
   documents: readonly DocumentInfo[]
+  setDocuments: DataResourceSetter<readonly DocumentInfo[]>
   treeConfig: TreeState
   setTreeConfig: DataResourceSetter<TreeState>
 }
@@ -38,7 +39,7 @@ export const newRootNode = (children: TreeNodeData[] = []): TreeNodeFolder => ({
 export const WorkspaceTree = withOptionalLoading(configWorkspaceTreeState, 'treeConfig', defaultTreeConfig,
   withRequiredLoading(documentsState, 'documents',
     (props: Props) => {
-      const { documents, treeConfig, setTreeConfig } = props
+      const { documents, setDocuments, treeConfig, setTreeConfig } = props
       const [treeData, setTreeData] = useState<TreeNodeData>(newRootNode)
       const activeDocument = useRecoilValue(activeDocumentState)
       const tree = useRef<TreeApi<TreeNodeData>>(null)
@@ -75,11 +76,12 @@ export const WorkspaceTree = withOptionalLoading(configWorkspaceTreeState, 'tree
             : previousTreeConfig.expandedFolders.filter(i => i !== id)
 
           const nextTreeConfig = { ...previousTreeConfig, expandedFolders }
-          setTreeConfig(right(nextTreeConfig))
+          setTreeConfig(E.right(nextTreeConfig))
         }
       }
 
-      const newButtonEnabled = tree.current?.getSelectedIds().length === 1
+      // const newButtonEnabled = tree.current?.getSelectedIds().length === 1
+      const newButtonEnabled = true
 
       const onNew = () => {
         if (!newButtonEnabled)
@@ -95,6 +97,21 @@ export const WorkspaceTree = withOptionalLoading(configWorkspaceTreeState, 'tree
       const onSubmitNew = (newProps: {name: string}) => {
         console.log(newProps.name)
         closeModal()
+        const parent = tree.current!.getSelectedIds()[0]
+        const title = newProps.name
+        const key = title.toLowerCase().replace(/ +/g, '-')
+        const id = `${parent}/${key}`
+        const path = id.split('/') as NonEmptyStringArray
+        if (path.length == 0)
+          throw new Error('Path cannot be empty')
+
+        const info: DocumentInfo = {
+          id,
+          title,
+          path,
+        }
+        const nextDocuments = documents.concat(info)
+        setDocuments(E.right(nextDocuments))
       }
 
       return <div>

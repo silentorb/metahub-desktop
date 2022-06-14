@@ -24,7 +24,7 @@ function MaybeToggleButton({ toggle, isOpen, isFolder, isSelected }: any) {
 }
 
 function Icon({ isFolder, isSelected }: any) {
-  if (false) {
+  if (isFolder) {
     return (
       <Folder
         className="folder"
@@ -64,7 +64,9 @@ export const TreeNode = withNavigation((props: Props) => {
     const { isOpen } = state
     const name = data.title
 
-    const onDoubleClick = () => {
+    const onDoubleClick = isFolder
+      ? undefined
+      : () => {
         const { id, title } = data
         navigateTo({ id, title })
       }
